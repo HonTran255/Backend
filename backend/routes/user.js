@@ -61,7 +61,7 @@ router.put(
 router.delete('/user/address/:userId', isAuth, removeAddress);
 
 //avatar
-router.put('/user/avatar/:userId', isAuth, upload, updateAvatar);
+router.put('/user/avatar/:userId', upload, updateAvatar);
 
 //router params
 router.param('userId', userById);

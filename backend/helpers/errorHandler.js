@@ -10,7 +10,7 @@ const uniqueMessage = (error) => {
             fieldName.slice(1) +
             ' already exists';
     } catch (ex) {
-        output = 'Unique field already exists';
+        output = 'Trường này đã tồn tại';
     }
 
     return output;
@@ -26,7 +26,7 @@ exports.errorHandler = (error) => {
                 message = uniqueMessage(error);
                 break;
             default:
-                message = 'Something went wrong';
+                message = 'Có gì đó sai';
         }
     } else {
         // for (let errorName in error.errorors) {

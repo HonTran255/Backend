@@ -4,30 +4,28 @@ const updateProfile = () => [
     check('firstname')
         .not()
         .isEmpty()
-        .withMessage('Firstname is required')
-        .isLength({ max: 32 })
-        .withMessage('Firstname can contain up to 32 characters')
+        .withMessage('Vui lòng điền họ')
+        .isLength({ max: 20 })
+        .withMessage('Họ có thể chứa 20 ký tự')
         .matches(
             /^[A-Za-záàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệóòỏõọôốồổỗộơớờởỡợíìỉĩịúùủũụưứừửữựýỳỷỹỵđÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬÉÈẺẼẸÊẾỀỂỄỆÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÍÌỈĨỊÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴĐ\d\s_'-]*$/,
         )
         .withMessage(
-            "Firstname can contain numbers, some special characters such as _, ', - and space",
-        )
-        .custom(checkStoreName),
+            "Họ có thể chứa số, ký tự đặt biệt,....",
+        ),
 
     check('lastname')
         .not()
         .isEmpty()
-        .withMessage('Lastname is required')
+        .withMessage('Vui lòng điền tên')
         .isLength({ max: 32 })
-        .withMessage('Lastname can contain up to 32 characters')
+        .withMessage('Tên có thể chứa 20 ký tự')
         .matches(
             /^[A-Za-záàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệóòỏõọôốồổỗộơớờởỡợíìỉĩịúùủũụưứừửữựýỳỷỹỵđÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬÉÈẺẼẸÊẾỀỂỄỆÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÍÌỈĨỊÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴĐ\d\s_'-]*$/,
         )
         .withMessage(
-            "Lastname can contain numbers, some special characters such as _, ', - and space",
-        )
-        .custom(checkStoreName),
+            "Tên có thể chứa số, ký tự đặt biệt,....",
+        ),
 
     oneOf(
         [
@@ -50,7 +48,7 @@ const updateProfile = () => [
 
             check('email').not().exists(),
         ],
-        'Email must contain @',
+        'Email phải chứa @',
     ),
 
     oneOf(
@@ -62,7 +60,7 @@ const updateProfile = () => [
 
             check('phone').not().exists(),
         ],
-        'Phone must contain 10 or 11 numbers',
+        'Số điện thoại phải có 10 or 11 chữ số',
     ),
 ];
 
@@ -70,19 +68,19 @@ const updateAccount = () => [
     check('currentPassword')
         .not()
         .isEmpty()
-        .withMessage('Current Password is required')
+        .withMessage('Vui lòng nhập mật khẩu hiện tại.')
         .matches(/^[A-Za-z\d@$!%*?&]*$/)
-        .withMessage('Current Password contains invalid characters'),
+        .withMessage('Mật khẩu hiện tại chứa ký tự không hợp lệ'),
 
     check('newPassword')
         .not()
         .isEmpty()
-        .withMessage('New password is required')
+        .withMessage('Vui lòng nhập mật khẩu mới')
         .matches(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
         )
         .withMessage(
-            'New Password must contain at least 6 characters, at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character such as @, $, !, %, *, ?, &',
+            'Mật khẩu mới phải có ít nhất 6 ký tự, ít nhất 1 ký tự in hoa, 1 ký tự thường, 1 ký tự số và 1 ký tự đặt biệt như @, $, !, %, *, ?, &',
         ),
 ];
 
@@ -90,28 +88,10 @@ const userAddress = () => [
     check('address')
         .not()
         .isEmpty()
-        .withMessage('Address is required')
+        .withMessage('Vui lòng nhập địa chỉ')
         .isLength({ max: 200 })
-        .withMessage('Address can contain up to 200 characters'),
+        .withMessage('Địa chỉ có thể chứa đến 200 ký tự'),
 ];
-
-//custom validator
-const checkStoreName = (val) => {
-    const regexes = [/g[o0][o0]d[^\w]*deal/i];
-
-    let flag = true;
-    regexes.forEach((regex) => {
-        if (regex.test(val)) {
-            flag = false;
-        }
-    });
-
-    if (!flag) {
-        return Promise.reject('Name contains invalid characters');
-    }
-
-    return true;
-};
 
 module.exports = {
     updateProfile,

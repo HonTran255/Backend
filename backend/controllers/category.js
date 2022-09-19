@@ -6,7 +6,7 @@ exports.categoryById = (req, res, next, id) => {
     Category.findById(id, (error, category) => {
         if (error || !category) {
             return res.status(404).json({
-                error: 'category not found',
+                error: 'Không tìm thấy danh mục',
             });
         }
 
@@ -17,10 +17,6 @@ exports.categoryById = (req, res, next, id) => {
 
 exports.getCategory = (req, res) => {
     Category.findOne({ _id: req.category._id })
-        .populate({
-            path: 'categoryId',
-            populate: { path: 'categoryId' },
-        })
         .exec()
         .then((category) => {
             if (!category)
@@ -40,149 +36,114 @@ exports.getCategory = (req, res) => {
         });
 };
 
-exports.checkCategory = (req, res, next) => {
-    const { categoryId } = req.fields;
-    if (categoryId) {
-        Category.findOne({ _id: categoryId })
-            .populate('categoryId')
+exports.checkCategory = (req, res, next, id) => {
+    if (id) {
+        Category.findOne({ _id: id })
             .exec()
             .then((category) => {
-                if (
-                    !category ||
-                    (category.categoryId != null &&
-                        category.categoryId.categoryId != null)
-                ) {
-                    try {
-                        fs.unlinkSync('public' + req.filepaths[0]);
-                    } catch {}
-
+                if (!category) {
                     return res.status(400).json({
-                        error: 'categoryId invalid',
+                        error: 'Id không hợp lệ',
                     });
                 } else next();
             })
             .catch((error) => {
-                try {
-                    fs.unlinkSync('public' + req.filepaths[0]);
-                } catch {}
 
                 return res.status(400).json({
-                    error: 'categoryId invalid',
+                    error: 'Id không hợp lệ',
                 });
             });
     } else next();
 };
 
-exports.checkCategoryChild = (req, res, next) => {
-    let { categoryId } = req.body;
+// exports.checkCategoryChild = (req, res, next) => {
+//     let { categoryId } = req.body;
 
-    try {
-        if (!categoryId) categoryId = req.fields.categoryId;
-    } catch {}
+//     try {
+//         if (!categoryId) categoryId = req.body.categoryId;
+//     } catch {}
 
-    Category.findOne({ categoryId })
-        .exec()
-        .then((category) => {
-            if (!category) next();
-            else {
-                try {
-                    req.filepaths.forEach((path) => {
-                        fs.unlinkSync('public' + path);
-                    });
-                } catch (err) {}
+//     Category.findOne({ categoryId })
+//         .exec()
+//         .then((category) => {
+//             if (!category) next();
+//             else {
+//                 try {
+//                     req.filepaths.forEach((path) => {
+//                         fs.unlinkSync('public' + path);
+//                     });
+//                 } catch (err) {}
 
-                return res.status(400).json({
-                    error: 'categoryId invalid',
-                });
-            }
-        })
-        .catch((error) => next());
-};
+//                 return res.status(400).json({
+//                     error: 'categoryId invalid',
+//                 });
+//             }
+//         })
+//         .catch((error) => next());
+// };
 
-exports.checkListCategoriesChild = (req, res, next) => {
-    const { categoryIds } = req.body;
+// exports.checkListCategoriesChild = (req, res, next) => {
+//     const { categoryIds } = req.body;
 
-    Category.findOne({ categoryId: { $in: categoryIds } })
-        .exec()
-        .then((category) => {
-            if (!category) next();
-            else
-                return res.status(400).json({
-                    error: 'categoryIds invalid',
-                });
-        })
-        .catch((error) => next());
-};
+//     Category.findOne({ categoryId: { $in: categoryIds } })
+//         .exec()
+//         .then((category) => {
+//             if (!category) next();
+//             else
+//                 return res.status(400).json({
+//                     error: 'categoryIds invalid',
+//                 });
+//         })
+//         .catch((error) => next());
+// };
 
 exports.createCategory = (req, res) => {
-    const { name, categoryId } = req.fields;
+    const { name } = req.body;
     if (!name ) {
-        try {
-            fs.unlinkSync('public' + req.filepaths[0]);
-        } catch {}
-
         return res.status(400).json({
-            error: 'All fields are required',
+            error: 'Vui lòng điền tên thư mục',
         });
     }
-
     const category = new Category({
-        name,
-        categoryId,
+        name
     });
 
     category.save((error, category) => {
         if (error || !category) {
-            try {
-                fs.unlinkSync('public' + req.filepaths[0]);
-            } catch {}
-
             return res.status(400).json({
                 error: errorHandler(error),
             });
         }
 
         return res.json({
-            success: 'Creating category successfully',
+            success: 'Tạo danh mục thành công',
             category,
         });
     });
 };
 
-exports.updateCategory = (req, res) => {
-    let { name, categoryId } = req.fields;
-    if (!categoryId) categoryId = null;
-    else if (categoryId == req.category._id) {
+exports.updateCategory = (req, res,_id) => {
+    let { name } = req.body;
+    if (_id == req.category._id) {
         return res.status(400).json({
-            error: 'categoryId invalid',
+            error: 'Id không hợp lệ',
         });
     }
 
     if (!name) {
-        try {
-            fs.unlinkSync('public' + req.filepaths[0]);
-        } catch {}
-
         return res.status(400).json({
-            error: 'All fields are required',
+            error: 'Vui lòng điền tên danh mục',
         });
     }
 
     Category.findOneAndUpdate(
         { _id: req.category._id },
-        { $set: { name, categoryId } },
+        { $set: { name } },
         { new: true },
     )
-        .populate({
-            path: 'categoryId',
-            populate: { path: 'categoryId' },
-        })
         .exec()
         .then((category) => {
             if (!category) {
-                try {
-                    fs.unlinkSync('public' + req.filepaths[0]);
-                } catch {}
 
                 return res.status(400).json({
                     error: errorHandler(error),
@@ -195,10 +156,6 @@ exports.updateCategory = (req, res) => {
             });
         })
         .catch((error) => {
-            try {
-                fs.unlinkSync('public' + req.filepaths[0]);
-            } catch {}
-
             return res.status(500).json({
                 error: errorHandler(error),
             });
@@ -211,25 +168,20 @@ exports.removeCategory = (req, res) => {
         { $set: { isDeleted: true } },
         { new: true },
     )
-        .populate({
-            path: 'categoryId',
-            populate: { path: 'categoryId' },
-        })
         .exec()
         .then((category) => {
             if (!category) {
                 return res.status(404).json({
-                    error: 'category not found',
+                    error: 'Không tìm thấy danh mục',
                 });
             }
-
             return res.json({
                 success: 'Remove category successfully',
             });
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'category not found',
+                error: 'Không tìm thấy danh mục',
             });
         });
 };
@@ -248,7 +200,7 @@ exports.restoreCategory = (req, res) => {
         .then((category) => {
             if (!category) {
                 return res.status(404).json({
-                    error: 'category not found',
+                    error: 'Không tìm thấy danh mục',
                 });
             }
 
@@ -258,7 +210,7 @@ exports.restoreCategory = (req, res) => {
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'category not found',
+                error: 'Không tìm thấy danh mục',
             });
         });
 };

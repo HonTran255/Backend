@@ -40,7 +40,7 @@ exports.signin = (req, res, next) => {
         .then((user) => {
             if (!user) {
                 return res.status(404).json({
-                    error: 'User not found',
+                    error: 'Không tìm thấy người dùng',
                 });
             }
 
@@ -56,7 +56,7 @@ exports.signin = (req, res, next) => {
         })
         .catch((error) => {
             res.status(404).json({
-                error: 'User not found',
+                error: 'Không tìm thấy người dùng',
             });
         });
 };
@@ -196,7 +196,7 @@ exports.forgotPassword = (req, res, next) => {
         .then((user) => {
             if (!user) {
                 return res.status(404).json({
-                    error: 'User not found',
+                    error: 'Không tìm thấy người dùng',
                 });
             }
 
@@ -204,20 +204,20 @@ exports.forgotPassword = (req, res, next) => {
             const msg = {
                 email: email ? email : '',
                 name: user.firstname + ' ' + user.lastname,
-                title: 'Request to change password',
-                text: 'Please click on the following link to change your password.',
+                title: 'Yêu cầu đổi mật khẩu',
+                text: 'Vui lòng nhấn vào được link bên dưới để thay đổi mật khẩu',
                 code: forgot_password_code,
             };
             req.msg = msg;
             next();
 
             return res.json({
-                success: 'Request successfully, waiting for email',
+                success: 'Yêu cầu thành công, xin vui lòng kiểm tra email',
             });
         })
         .catch((error) => {
             return res.status(404).json({
-                error: 'User not found',
+                error: 'Không tìm thấy người dùng',
             });
         });
 };
@@ -233,7 +233,7 @@ exports.changePassword = (req, res) => {
         .then((user) => {
             if (!user) {
                 return res.status(404).json({
-                    error: 'User not found',
+                    error: 'Không tìm thấy người dùng',
                 });
             }
 
@@ -251,7 +251,7 @@ exports.changePassword = (req, res) => {
         })
         .catch((error) => {
             return res.status(404).json({
-                error: 'User not found',
+                error: 'Không tìm thấy người dùng',
             });
         });
 };
@@ -371,7 +371,7 @@ exports.verifyPassword = (req, res, next) => {
     User.findById(req.user._id, (error, user) => {
         if (error || !user) {
             return res.status(404).json({
-                error: 'User not found',
+                error: 'Không tìm thấy người dùng',
             });
         }
 

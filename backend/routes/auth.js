@@ -21,7 +21,6 @@ const {
 const { userById } = require('../controllers/user');
 const {
     sendChangePasswordEmail,
-    sendConfirmationEmail,
     verifyEmail,
 } = require('../controllers/email');
 
@@ -58,7 +57,6 @@ router.put(
     validateHandler,
     changePassword,
 );
-router.get('/confirm/email/:userId', isAuth, sendConfirmationEmail);
 router.get('/verify/email/:emailCode', verifyEmail);
 
 router.param('userId', userById);
