@@ -16,6 +16,8 @@ const {
     updateAddress,
     removeAddress,
     updateAvatar,
+    updateCover,
+    listUser,
     getUserProfile,
     listUserForAdmin,
     updatePassword,
@@ -41,6 +43,7 @@ router.put(
 );
 
 //list
+router.get('/users', listUser);
 router.get('/users/for/admin/:userId', isAuth, isAdmin, listUserForAdmin);
 
 //address
@@ -61,7 +64,9 @@ router.put(
 router.delete('/user/address/:userId', isAuth, removeAddress);
 
 //avatar
-router.put('/user/avatar/:userId', upload, updateAvatar);
+router.put('/user/avatar/:userId', isAuth, upload, updateAvatar);
+//cover
+router.put('/user/cover/:userId', isAuth, upload, updateCover);
 
 //router params
 router.param('userId', userById);

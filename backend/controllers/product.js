@@ -61,6 +61,17 @@ exports.createProduct = (req, res) => {
     } = req.fields;
     const listImages = req.filepaths;
 
+    // console.log(
+    //     name,
+    //     description,
+    //     price,
+    //     promotionalPrice,
+    //     quantity,
+    //     categoryId,
+    //     styleValueIds,
+    //     listImages,
+    // );
+
     if (
         !name ||
         !description ||
@@ -81,6 +92,7 @@ exports.createProduct = (req, res) => {
             error: 'All fields are required',
         });
     }
+
 
     const product = new Product({
         name,
@@ -225,44 +237,6 @@ exports.activeProduct = (req, res) => {
 
             return res.json({
                 success: 'Active/InActive product status successfully',
-                product,
-            });
-        })
-        .catch((error) => {
-            return res.status(400).json({
-                error: errorHandler(error),
-            });
-        });
-};
-
-/*------
-  SELL OR STORE
-  ------*/
-exports.sellingProduct = (req, res) => {
-    const { isSelling } = req.body;
-
-    Product.findOneAndUpdate(
-        { _id: req.product._id },
-        { $set: { isSelling } },
-        { new: true },
-    )
-        .populate({
-            path: 'categoryId',
-            populate: {
-                path: 'categoryId',
-                populate: { path: 'categoryId' },
-            },
-        })
-        .exec()
-        .then((product) => {
-            if (!product) {
-                return res.status(404).json({
-                    error: 'product not found',
-                });
-            }
-
-            return res.json({
-                success: 'Update product status successfully',
                 product,
             });
         })

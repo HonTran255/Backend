@@ -1,7 +1,7 @@
 const User = require('../models/user');
 const fs = require('fs');
-const { errorHandler } = require('../helpers/errorHandler');
 const { cleanUser, cleanUserLess } = require('../helpers/userHandler');
+const { errorHandler } = require('../helpers/errorHandler');
 
 /*------
   USER
@@ -302,8 +302,138 @@ exports.updateAvatar = (req, res) => {
 };
 
 /*------
+  COVER
+  ------*/
+exports.updateCover = (req, res) => {
+    const oldpath = req.user.cover;
+
+    User.findOneAndUpdate(
+        { _id: req.user._id },
+        { $set: { cover: req.filepaths[0] } },
+        { new: true },
+    )
+        .exec()
+        .then((user) => {
+            if (!user) {
+                try {
+                    fs.unlinkSync('public' + req.filepaths[0]);
+                } catch {}
+
+                return res.status(500).json({
+                    error: 'User not found',
+                });
+            }
+
+            if (oldpath != '/uploads/default.jpg') {
+                try {
+                    fs.unlinkSync('public' + oldpath);
+                } catch {}
+            }
+
+            return res.json({
+                success: 'Update cover successfully',
+                user: cleanUserLess(user),
+            });
+        })
+        .catch((error) => {
+            try {
+                fs.unlinkSync('public' + req.filepaths[0]);
+            } catch {}
+
+            return res.status(400).json({
+                error: errorHandler(error),
+            });
+        });
+};
+
+/*------
   LIST USERS
   ------*/
+// users?search=...&sortBy=...&order=...&limit=...&page=...
+exports.listUser = (req, res) => {
+    const search = req.query.search ? req.query.search : '';
+    const regex = search
+        .split(' ')
+        .filter((w) => w)
+        .join('|');
+    const sortBy = req.query.sortBy ? req.query.sortBy : '_id';
+    const order =
+        req.query.order &&
+        (req.query.order == 'asc' || req.query.order == 'desc')
+            ? req.query.order
+            : 'asc'; //desc
+
+    const limit =
+        req.query.limit && req.query.limit > 0 ? parseInt(req.query.limit) : 6;
+    const page =
+        req.query.page && req.query.page > 0 ? parseInt(req.query.page) : 1;
+    let skip = (page - 1) * limit;
+
+    const filter = {
+        search,
+        sortBy,
+        order,
+        limit,
+        pageCurrent: page,
+    };
+
+    const filterArgs = {
+        $or: [
+            { firstname: { $regex: regex, $options: 'i' } },
+            { lastname: { $regex: regex, $options: 'i' } },
+        ],
+        role: { $ne: 'admin' },
+    };
+
+    User.countDocuments(filterArgs, (error, count) => {
+        if (error) {
+            return res.status(404).json({
+                error: 'Users not found',
+            });
+        }
+
+        const size = count;
+        const pageCount = Math.ceil(size / limit);
+        filter.pageCount = pageCount;
+
+        if (page > pageCount) {
+            skip = (pageCount - 1) * limit;
+        }
+
+        if (count <= 0) {
+            return res.json({
+                success: 'Load list users successfully',
+                filter,
+                size,
+                users: [],
+            });
+        }
+
+        User.find(filterArgs)
+            .sort({ [sortBy]: order, _id: 1 })
+            .limit(limit)
+            .skip(skip)
+            .exec()
+            .then((users) => {
+                users.forEach((user) => {
+                    user = cleanUser(user);
+                });
+
+                return res.json({
+                    success: 'Load list users successfully',
+                    filter,
+                    size,
+                    users,
+                });
+            })
+            .catch((error) => {
+                return res.status(500).json({
+                    error: 'Load list users failed',
+                });
+            });
+    });
+};
+
 // list users for admin management
 exports.listUserForAdmin = (req, res) => {
     const search = req.query.search ? req.query.search : '';

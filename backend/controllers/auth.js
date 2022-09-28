@@ -14,7 +14,7 @@ exports.signup = (req, res) => {
         }
 
         return res.json({
-            success: 'Đăng ký thành công, bạn có thể đăng nhập ngay bay giờ',
+            success: 'Signing up successfully, you can sign in now',
         });
     });
 };
@@ -40,7 +40,7 @@ exports.signin = (req, res, next) => {
         .then((user) => {
             if (!user) {
                 return res.status(404).json({
-                    error: 'Không tìm thấy người dùng',
+                    error: 'User not found',
                 });
             }
 
@@ -56,7 +56,7 @@ exports.signin = (req, res, next) => {
         })
         .catch((error) => {
             res.status(404).json({
-                error: 'Không tìm thấy người dùng',
+                error: 'User not found',
             });
         });
 };
@@ -85,7 +85,7 @@ exports.createToken = (req, res) => {
         }
 
         return res.json({
-            success: 'Đăng nhập thành công',
+            success: 'Sign in successfully',
             accessToken,
             refreshToken,
             _id: user._id,
@@ -104,7 +104,7 @@ exports.signout = (req, res) => {
         .exec()
         .then(() => {
             return res.json({
-                success: 'Đăng xuất thành công',
+                success: 'Sign out successfully',
             });
         })
         .catch((error) => {
@@ -196,28 +196,29 @@ exports.forgotPassword = (req, res, next) => {
         .then((user) => {
             if (!user) {
                 return res.status(404).json({
-                    error: 'Không tìm thấy người dùng',
+                    error: 'User not found',
                 });
             }
 
-            //send email 
+            //send email or phone
             const msg = {
                 email: email ? email : '',
+                phone: phone ? phone : '',
                 name: user.firstname + ' ' + user.lastname,
-                title: 'Yêu cầu đổi mật khẩu',
-                text: 'Vui lòng nhấn vào được link bên dưới để thay đổi mật khẩu',
+                title: 'Request to change password',
+                text: 'Please click on the following link to change your password.',
                 code: forgot_password_code,
             };
             req.msg = msg;
             next();
 
             return res.json({
-                success: 'Yêu cầu thành công, xin vui lòng kiểm tra email',
+                success: 'Request successfully, waiting for email or sms',
             });
         })
         .catch((error) => {
             return res.status(404).json({
-                error: 'Không tìm thấy người dùng',
+                error: 'User not found',
             });
         });
 };
@@ -233,7 +234,7 @@ exports.changePassword = (req, res) => {
         .then((user) => {
             if (!user) {
                 return res.status(404).json({
-                    error: 'Không tìm thấy người dùng',
+                    error: 'User not found',
                 });
             }
 
@@ -245,13 +246,13 @@ exports.changePassword = (req, res) => {
                     });
                 }
                 return res.json({
-                    success: 'Cập nhật mật khẩu thành công',
+                    success: 'Update password successfully',
                 });
             });
         })
         .catch((error) => {
             return res.status(404).json({
-                error: 'Không tìm thấy người dùng',
+                error: 'User not found',
             });
         });
 };
@@ -371,7 +372,7 @@ exports.verifyPassword = (req, res, next) => {
     User.findById(req.user._id, (error, user) => {
         if (error || !user) {
             return res.status(404).json({
-                error: 'Không tìm thấy người dùng',
+                error: 'User not found',
             });
         }
 

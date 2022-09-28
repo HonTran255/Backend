@@ -17,6 +17,11 @@ const categorySchema = new mongoose.Schema(
             slug: 'name',
             unique: true,
         },
+        image: {
+            type: String,
+            trim: true,
+            required: true,
+        },
         categoryId: {
             type: ObjectId,
             ref: 'Category',

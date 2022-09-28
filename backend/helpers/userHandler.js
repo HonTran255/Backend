@@ -8,6 +8,8 @@ exports.cleanUser = (user) => {
     user.isEmailActive = undefined;
     user.isPhoneActive = undefined;
     user.addresses = undefined;
+    user.e_wallet = undefined;
+    // user.cart = undefined;
 
     if (user.email) user.email = user.email.slice(0, 6) + '******';
     if (user.phone) user.phone = '*******' + user.phone.slice(-3);

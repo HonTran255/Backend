@@ -45,11 +45,8 @@ const productSchema = new mongoose.Schema(
         },
         isActive: {
             type: Boolean,
-            required: true,
-        },
-        isSelling: {
-            type: Boolean,
             default: true,
+            
         },
         listImages: {
             type: [String],

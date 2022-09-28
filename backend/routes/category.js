@@ -4,8 +4,9 @@ const router = express.Router();
 //import controllers
 const { isAuth, isAdmin } = require('../controllers/auth');
 const { userById } = require('../controllers/user');
-
+const { upload } = require('../controllers/upload');
 const {
+    categoryById,
     getCategory,
     checkCategory,
     createCategory,
@@ -23,7 +24,7 @@ router.get('/categories/:userId', isAuth, isAdmin, listCategories);
 router.post(
     '/category/create/:userId',
     isAuth,
-    isAdmin,
+    upload,
     checkCategory,
     createCategory,
 );
@@ -31,6 +32,7 @@ router.put(
     '/category/:categoryId/:userId',
     isAuth,
     isAdmin,
+    upload,
     checkCategory,
     updateCategory,
 );
@@ -43,6 +45,7 @@ router.get(
 );
 
 //router params
+router.param('categoryId', categoryById);
 router.param('userId', userById);
 
 module.exports = router;

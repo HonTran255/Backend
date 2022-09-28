@@ -1,5 +1,6 @@
 const fs = require('fs');
 const formidable = require('formidable');
+const cloudinary = require('cloudinary');
 
 exports.upload = (req, res, next) => {
     // console.log('---UPLOAD IMAGE---');
@@ -87,3 +88,4 @@ exports.upload = (req, res, next) => {
         if (flag) next();
     });
 };
+

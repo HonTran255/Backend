@@ -38,6 +38,20 @@ const userSchema = new mongoose.Schema(
             unique: true,
             sparse: true,
         },
+        isEmailActive: {
+            type: Boolean,
+            default: false,
+        },
+        email_code: {
+            type: String,
+        },
+        isPhoneActive: {
+            type: Boolean,
+            default: false,
+        },
+        phone_code: {
+            type: String,
+        },
         id_card: {
             type: String,
             trim: true,
@@ -69,11 +83,20 @@ const userSchema = new mongoose.Schema(
         },
         avatar: {
             type: String,
-            default: '/uploads/default.png',
+            default: '/uploads/default.jpg',
         },
         cover: {
             type: String,
-            default: '/uploads/default.png',
+            default: '/uploads/default.jpg',
+        },
+        e_wallet: {
+            type: mongoose.Decimal128,
+            min: 0,
+            default: 0,
+        },
+        point: {
+            type: Number,
+            default: 0,
         },
         googleId: {
             type: String,
