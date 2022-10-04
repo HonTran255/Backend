@@ -29,15 +29,8 @@ exports.cartItemById = (req, res, next, id) => {
 };
 
 exports.createCart = (req, res, next) => {
-    const { storeId } = req.body;
-
-    if (!storeId)
-        return res.status(400).json({
-            error: 'Store not found',
-        });
-
     Cart.findOneAndUpdate(
-        { userId: req.user._id, storeId },
+        { userId: req.user._id },
         { isDeleted: false },
         { upsert: true, new: true },
     )
@@ -61,7 +54,7 @@ exports.createCart = (req, res, next) => {
 };
 
 exports.createCartItem = (req, res, next) => {
-    const { productId, styleValueIds, count } = req.body;
+    const { productId, count } = req.body;
 
     if (!productId || !count) {
         const cartId = req.cartItem.cartId;
@@ -78,13 +71,8 @@ exports.createCartItem = (req, res, next) => {
         });
     }
 
-    let styleValueIdsArray = [];
-    if (styleValueIds) {
-        styleValueIdsArray = styleValueIds.split('|');
-    }
-
     CartItem.findOneAndUpdate(
-        { productId, styleValueIds: styleValueIdsArray, cartId: req.cart._id },
+        { productId, cartId: req.cart._id },
         { $inc: { count: +count } },
         { upsert: true, new: true },
     )
@@ -97,20 +85,6 @@ exports.createCartItem = (req, res, next) => {
                     populate: { path: 'categoryId' },
                 },
             },
-            populate: {
-                path: 'storeId',
-                select: {
-                    _id: 1,
-                    name: 1,
-                    avatar: 1,
-                    isActive: 1,
-                    isOpen: 1,
-                },
-            },
-        })
-        .populate({
-            path: 'styleValueIds',
-            populate: { path: 'styleId' },
         })
         .exec()
         .then((item) => {
@@ -165,7 +139,6 @@ exports.listCarts = (req, res) => {
         }
 
         Cart.find({ userId, isDeleted: false })
-            .populate('storeId', '_id name avatar isActive isOpen')
             .sort({ name: 1, _id: 1 })
             .skip(skip)
             .limit(limit)
@@ -196,21 +169,7 @@ exports.listItemByCard = (req, res) => {
                     path: 'categoryId',
                     populate: { path: 'categoryId' },
                 },
-            },
-            populate: {
-                path: 'storeId',
-                select: {
-                    _id: 1,
-                    name: 1,
-                    avatar: 1,
-                    isActive: 1,
-                    isOpen: 1,
-                },
-            },
-        })
-        .populate({
-            path: 'styleValueIds',
-            populate: { path: 'styleId' },
+            }
         })
         .exec()
         .then((items) => {
@@ -242,21 +201,7 @@ exports.updateCartItem = (req, res) => {
                     path: 'categoryId',
                     populate: { path: 'categoryId' },
                 },
-            },
-            populate: {
-                path: 'storeId',
-                select: {
-                    _id: 1,
-                    name: 1,
-                    avatar: 1,
-                    isActive: 1,
-                    isOpen: 1,
-                },
-            },
-        })
-        .populate({
-            path: 'styleValueIds',
-            populate: { path: 'styleId' },
+            }
         })
         .exec()
         .then((item) => {

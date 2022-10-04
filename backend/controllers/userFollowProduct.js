@@ -25,11 +25,6 @@ exports.followProduct = (req, res) => {
                             populate: { path: 'categoryId' },
                         },
                     })
-                    .populate({
-                        path: 'styleValueIds',
-                        populate: { path: 'styleId' },
-                    })
-                    .populate('storeId', '_id name avatar isActive isOpen')
                     .exec()
                     .then((product) => {
                         if (!product) {
@@ -75,11 +70,6 @@ exports.unfollowProduct = (req, res) => {
                             populate: { path: 'categoryId' },
                         },
                     })
-                    .populate({
-                        path: 'styleValueIds',
-                        populate: { path: 'styleId' },
-                    })
-                    .populate('storeId', '_id name avatar isActive isOpen')
                     .exec()
                     .then((product) => {
                         if (!product) {

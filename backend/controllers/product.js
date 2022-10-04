@@ -17,12 +17,12 @@ exports.productById = (req, res, next, id) => {
 };
 
 exports.getProduct = (req, res) => {
-    if (!req.product.isActive || !req.product.isSelling)
+    if (!req.product.isActive)
         return res.status(404).json({
             error: 'Active/Selling Product not found',
         });
 
-    Product.findOne({ _id: req.product._id, isSelling: true, isActive: true })
+    Product.findOne({ _id: req.product._id, isActive: true })
         .populate({
             path: 'categoryId',
             populate: {
@@ -185,29 +185,30 @@ exports.updateProduct = (req, res) => {
         });
 };
 
+
 /*------
   ACTIVE
   ------*/
-// exports.activeAllProduct = (req, res) => {
-//     const { isActive } = req.body;
+exports.activeAllProduct = (req, res) => {
+    const { isActive } = req.body;
 
-//     Product.updateMany(
-//         { $set: { isActive } },
-//         { new: true },
-//     )
-//         .exec()
-//         .then(() => {
-//             return res.json({
-//                 success: 'Active/InActive store & products successfully',
-//                 store: req.store,
-//             });
-//         })
-//         .catch((error) => {
-//             return res.status(400).json({
-//                 error: errorHandler(error),
-//             });
-//         });
-// };
+    Product.updateMany(
+        { $set: { isActive } },
+        { new: true },
+    )
+        .exec()
+        .then(() => {
+            return res.json({
+                success: 'Active/InActive products successfully',
+                store: req.store,
+            });
+        })
+        .catch((error) => {
+            return res.status(400).json({
+                error: errorHandler(error),
+            });
+        });
+};
 
 /*------
   ACTIVE
@@ -439,7 +440,7 @@ exports.removefromListImages = (req, res) => {
 exports.listProductCategories = (req, res, next) => {
     Product.distinct(
         'categoryId',
-        { isActive: true, isSelling: true },
+        { isActive: true },
         (error, categories) => {
             if (error) {
                 return res.status(400).json({

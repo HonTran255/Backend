@@ -27,25 +27,24 @@ router.get('/product/:productId', getProduct);
 router.get('/active/products', listProductCategories, listProducts);
 
 router.get('/products/:userId', isAuth, isAdmin, listProductsForAdmin);
-// router.post(
-//     '/product/create/:userId',
-//     isAuth,
-//     upload,
-//     checkCategoryChild,
-//     createProduct,
-// );
-// router.put(
-//     '/product/update/:productId/:userId',
-//     isAuth,
-//     upload,
-//     checkCategoryChild,
-//     updateProduct,
-// );
-// router.put(
-//     '/product/selling/:productId/:userId',
-//     isAuth,
-//     sellingProduct,
-// );
+router.post(
+    '/product/create/:userId',
+    isAuth,
+    isAdmin,
+    upload,
+    checkCategoryChild,
+    createProduct,
+);
+
+router.put(
+    '/product/update/:productId/:userId',
+    isAuth,
+    isAdmin,
+    upload,
+    checkCategoryChild,
+    updateProduct,
+);
+
 router.put(
     '/product/active/:productId/:userId',
     isAuth,
@@ -55,6 +54,7 @@ router.put(
 router.post(
     '/product/images/:productId/:userId',
     isAuth,
+    isAdmin,
     upload,
     addToListImages,
 );

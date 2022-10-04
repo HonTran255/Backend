@@ -18,7 +18,7 @@ router.get(
     '/product/number/of/followers/:productId',
     getNumberOfFollowersForProduct,
 );
-router.get('/follow/product/:productId', followProduct);
+router.get('/follow/product/:productId/:userId', isAuth, followProduct);
 router.delete('/unfollow/product/:productId/:userId', isAuth, unfollowProduct);
 router.get('/following/products/:userId', isAuth, listFollowingProductsByUser);
 router.get(
