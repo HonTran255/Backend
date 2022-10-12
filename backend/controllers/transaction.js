@@ -1,6 +1,5 @@
 const Transaction = require('../models/transaction');
 const User = require('../models/user');
-const { cleanUserLess, cleanUser } = require('../helpers/userHandler');
 const { errorHandler } = require('../helpers/errorHandler');
 
 exports.transactionById = (req, res, next, id) => {
@@ -19,7 +18,6 @@ exports.transactionById = (req, res, next, id) => {
 exports.readTransaction = (req, res) => {
     Transaction.findOne({ _id: req.transaction._id })
         .populate('userId', '_id firstname lastname avatar')
-        .populate('storeId', '_id name avatar isOpen isActive')
         .exec()
         .then((transaction) => {
             if (!transaction)
@@ -73,7 +71,6 @@ exports.createTransaction = (req, res, next) => {
 
     const transaction = new Transaction({
         userId,
-       
         isUp,
         code,
         amount,
@@ -147,7 +144,6 @@ exports.listTransactions = (req, res) => {
             .skip(skip)
             .limit(limit)
             .populate('userId', '_id firstname lastname avatar')
-            .populate('storeId', '_id name avatar isActive isOpen')
             .exec()
             .then((transactions) => {
                 return res.json({

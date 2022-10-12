@@ -1,5 +1,6 @@
 const Product = require('../models/product');
 const Category = require('../models/category.js');
+const Producer = require('../models/producer.js');
 const fs = require('fs');
 const { errorHandler } = require('../helpers/errorHandler');
 
@@ -30,6 +31,13 @@ exports.getProduct = (req, res) => {
                 populate: { path: 'categoryId' },
             },
         })
+        .populate({
+            path: 'producerId',
+            populate: {
+                path: 'producerId',
+                populate: { path: 'producerId' },
+            },
+        })
         .exec()
         .then((product) => {
             if (!product) {
@@ -58,20 +66,9 @@ exports.createProduct = (req, res) => {
         promotionalPrice,
         quantity,
         categoryId,
+        producerId,
     } = req.fields;
     const listImages = req.filepaths;
-
-    // console.log(
-    //     name,
-    //     description,
-    //     price,
-    //     promotionalPrice,
-    //     quantity,
-    //     categoryId,
-    //     styleValueIds,
-    //     listImages,
-    // );
-
     if (
         !name ||
         !description ||
@@ -79,6 +76,7 @@ exports.createProduct = (req, res) => {
         !promotionalPrice ||
         !quantity ||
         !categoryId ||
+        !producerId ||
         !listImages ||
         listImages.length <= 0
     ) {
@@ -101,6 +99,7 @@ exports.createProduct = (req, res) => {
         promotionalPrice,
         quantity,
         categoryId,
+        producerId,
         listImages,
     });
 
@@ -132,6 +131,7 @@ exports.updateProduct = (req, res) => {
         promotionalPrice,
         quantity,
         categoryId,
+        producerId,
     } = req.fields;
 
     if (
@@ -140,7 +140,8 @@ exports.updateProduct = (req, res) => {
         !price ||
         !promotionalPrice ||
         !quantity ||
-        !categoryId
+        !categoryId ||
+        !producerId
     ) {
         return res.status(400).json({
             error: 'All fields are required',
@@ -156,6 +157,7 @@ exports.updateProduct = (req, res) => {
             promotionalPrice,
             quantity,
             categoryId,
+            producerId,
         },
         { new: true },
     )
@@ -228,6 +230,13 @@ exports.activeProduct = (req, res) => {
                 populate: { path: 'categoryId' },
             },
         })
+        .populate({
+            path: 'producerId',
+            populate: {
+                path: 'producerId',
+                populate: { path: 'producerId' },
+            },
+        })
         .exec()
         .then((product) => {
             if (!product) {
@@ -275,6 +284,13 @@ exports.addToListImages = (req, res) => {
             populate: {
                 path: 'categoryId',
                 populate: { path: 'categoryId' },
+            },
+        })
+        .populate({
+            path: 'producerId',
+            populate: {
+                path: 'producerId',
+                populate: { path: 'producerId' },
             },
         })
         .exec()
@@ -338,6 +354,13 @@ exports.updateListImages = (req, res) => {
             populate: {
                 path: 'categoryId',
                 populate: { path: 'categoryId' },
+            },
+        })
+        .populate({
+            path: 'producerId',
+            populate: {
+                path: 'producerId',
+                populate: { path: 'producerId' },
             },
         })
         .exec()
@@ -414,6 +437,13 @@ exports.removefromListImages = (req, res) => {
                 populate: { path: 'categoryId' },
             },
         })
+        .populate({
+            path: 'producerId',
+            populate: {
+                path: 'producerId',
+                populate: { path: 'producerId' },
+            },
+        })
         .exec()
         .then((product) => {
             if (!product) {
@@ -442,12 +472,6 @@ exports.listProductCategories = (req, res, next) => {
         'categoryId',
         { isActive: true },
         (error, categories) => {
-            if (error) {
-                return res.status(400).json({
-                    error: 'Commissions not found',
-                });
-            }
-
             const categoryId = req.query.categoryId;
             console.log(categoryId, categories);
 
@@ -498,6 +522,61 @@ exports.listProductCategories = (req, res, next) => {
     );
 };
 
+exports.listProductProducers = (req, res, next) => {
+    Product.distinct(
+        'producerId',
+        { isActive: true },
+        (error, producers) => {
+
+            const producerId = req.query.producerId;
+            console.log(producerId, producers);
+
+            if (producerId) {
+                const filterProducers = producers.filter((producer) =>
+                    producer.equals(producerId),
+                );
+
+                if (filterProducers.length > 0) {
+                    req.loadedProducers = filterProducers;
+                    next();
+                } else {
+                    Producer.find({ _id: { $in: producers } })
+                        .populate({
+                            path: 'producerId',
+                            populate: { path: 'producerId' },
+                        })
+                        .exec()
+                        .then((newProducers) => {
+                            const filterProducers = newProducers
+                                .filter(
+                                    (producer) =>
+                                        (producer.producerId &&
+                                            producer.producerId._id ==
+                                            producerId) ||
+                                        (producer.producerId &&
+                                            producer.producerId.producerId &&
+                                            producer.producerId.producerId
+                                                ._id == producerId),
+                                )
+                                .map((producer) => producer._id);
+
+                            console.log(filterProducers);
+
+                            req.loadedProducers = filterProducers;
+                            next();
+                        })
+                        .catch((error) => {
+                            req.loadedProducers = [];
+                            next();
+                        });
+                }
+            } else {
+                req.loadedProducers = producers;
+                next();
+            }
+        },
+    );
+};
 
 exports.listProducts = (req, res) => {
     const search = req.query.search ? req.query.search : '';
@@ -521,6 +600,8 @@ exports.listProducts = (req, res) => {
 
     const categoryId = req.loadedCategories;
 
+    const producerId = req.loadedProducers;
+
     const rating =
         req.query.rating && req.query.rating > 0 && req.query.rating < 6
             ? parseInt(req.query.rating)
@@ -539,6 +620,7 @@ exports.listProducts = (req, res) => {
         sortBy,
         order,
         categoryId,
+        producerId,
         limit,
         pageCurrent: page,
         rating: rating !== -1 ? rating : 'all',
@@ -552,8 +634,8 @@ exports.listProducts = (req, res) => {
             { description: { $regex: regex, $options: 'i' } },
         ],
         categoryId: { $in: categoryId },
+        producerId: { $in: producerId },
         isActive: true,
-        isSelling: true,
         promotionalPrice: { $gte: 0 },
         rating: { $gte: 0 },
     };
@@ -595,6 +677,13 @@ exports.listProducts = (req, res) => {
                 populate: {
                     path: 'categoryId',
                     populate: { path: 'categoryId' },
+                },
+            })
+            .populate({
+                path: 'producerId',
+                populate: {
+                    path: 'producerId',
+                    populate: { path: 'producerId' },
                 },
             })
             .exec()
@@ -688,6 +777,13 @@ exports.listProductsForAdmin = (req, res) => {
                 populate: {
                     path: 'categoryId',
                     populate: { path: 'categoryId' },
+                },
+            })
+            .populate({
+                path: 'producerId',
+                populate: {
+                    path: 'producerId',
+                    populate: { path: 'producerId' },
                 },
             })
             .exec()

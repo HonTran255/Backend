@@ -19,12 +19,13 @@ const {
     listProducts,
     listProductsForAdmin,
     listProductCategories,
+    listProductProducers,
 } = require('../controllers/product');
 
 //routes
 router.get('/product/:productId', getProduct);
 
-router.get('/active/products', listProductCategories, listProducts);
+router.get('/active/products', listProductCategories,listProductProducers, listProducts);
 
 router.get('/products/:userId', isAuth, isAdmin, listProductsForAdmin);
 router.post(

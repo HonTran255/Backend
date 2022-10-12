@@ -64,6 +64,11 @@ const productSchema = new mongoose.Schema(
             min: 0,
             max: 5,
         },
+        producerId: {
+            type: ObjectId,
+            ref: 'Producer',
+            required: true,
+        },
     },
     { timestamps: true },
 );

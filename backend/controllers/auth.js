@@ -14,7 +14,7 @@ exports.signup = (req, res) => {
         }
 
         return res.json({
-            success: 'Signing up successfully, you can sign in now',
+            success: 'Đăng ký thành công, bạn có thể đăng nhập ngay bây giờ',
         });
     });
 };
@@ -40,13 +40,13 @@ exports.signin = (req, res, next) => {
         .then((user) => {
             if (!user) {
                 return res.status(404).json({
-                    error: 'User not found',
+                    error: 'Không tìm thấy người dùng',
                 });
             }
 
             if (!user.authenticate(password)) {
                 return res.status(401).json({
-                    error: "Password doesn't match",
+                    error: "Mật khẩu không chính xác",
                 });
             }
 
@@ -56,7 +56,7 @@ exports.signin = (req, res, next) => {
         })
         .catch((error) => {
             res.status(404).json({
-                error: 'User not found',
+                error: 'Không tìm thấy người dùng',
             });
         });
 };
@@ -80,12 +80,12 @@ exports.createToken = (req, res) => {
     token.save((error, t) => {
         if (error) {
             return res.status(500).json({
-                error: 'Create JWT failed, please try sign in again',
+                error: 'Tạo JWT thất bại, hãy thử lại lần nữa',
             });
         }
 
         return res.json({
-            success: 'Sign in successfully',
+            success: 'Đăng nhập thành công',
             accessToken,
             refreshToken,
             _id: user._id,
@@ -196,7 +196,7 @@ exports.forgotPassword = (req, res, next) => {
         .then((user) => {
             if (!user) {
                 return res.status(404).json({
-                    error: 'User not found',
+                    error: 'Không tìm thấy người dùng',
                 });
             }
 

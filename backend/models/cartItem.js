@@ -13,15 +13,7 @@ const cartItemSchema = new mongoose.Schema(
             ref: 'Product',
             required: true,
         },
-        styleValueIds: {
-            type: [
-                {
-                    type: ObjectId,
-                    ref: 'StyleValue',
-                },
-            ],
-            default: [],
-        },
+
         count: {
             type: Number,
             min: 1,

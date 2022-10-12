@@ -153,7 +153,7 @@ exports.listFollowingProductsByUser = (req, res) => {
         .then((follows) => {
             const productIds = follows.map((follow) => follow.productId);
             Product.countDocuments(
-                { _id: { $in: productIds }, isActive: true, isSelling: true },
+                { _id: { $in: productIds }, isActive: true },
                 (error, count) => {
                     if (error) {
                         return res.status(404).json({
@@ -182,7 +182,7 @@ exports.listFollowingProductsByUser = (req, res) => {
                     Product.find({
                         _id: { $in: productIds },
                         isActive: true,
-                        isSelling: true,
+
                     })
                         .sort({ name: 1, _id: 1 })
                         .skip(skip)
@@ -194,11 +194,6 @@ exports.listFollowingProductsByUser = (req, res) => {
                                 populate: { path: 'categoryId' },
                             },
                         })
-                        .populate({
-                            path: 'styleValueIds',
-                            populate: { path: 'styleId' },
-                        })
-                        .populate('storeId', '_id name avatar isActive isOpen')
                         .exec()
                         .then((products) => {
                             return res.json({

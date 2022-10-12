@@ -7,10 +7,6 @@ const cartSchema = new mongoose.Schema(
             type: ObjectId,
             ref: 'User',
         },
-        storeId: {
-            type: ObjectId,
-            ref: 'Store',
-        },
         isDeleted: {
             type: Boolean,
         },
@@ -18,6 +14,6 @@ const cartSchema = new mongoose.Schema(
     { timestamps: true },
 );
 
-cartSchema.index({ userId: 1, storeId: 1 }, { unique: true });
+cartSchema.index({ userId: 1 }, { unique: true });
 
 module.exports = mongoose.model('Cart', cartSchema);

@@ -6,7 +6,6 @@ const { isAuth, isAdmin, isManager } = require('../controllers/auth');
 const { userById } = require('../controllers/user');
 const { cartById } = require('../controllers/cart');
 const {
-    updateEWallet,
     createTransaction,
 } = require('../controllers/transaction');
 const {
@@ -24,7 +23,7 @@ const {
     updateQuantitySoldProduct,
     countOrders,
     listOrderItems,
-    updatePoint,
+
 } = require('../controllers/order');
 
 //routes
@@ -36,9 +35,8 @@ router.get(
     listOrderItems,
 );
 router.get(
-    '/order/items/by/store/:orderId/:storeId/:userId',
+    '/order/items/by/:orderId/:userId',
     isAuth,
-    isManager,
     checkOrderAuth,
     listOrderItems,
 );
@@ -56,9 +54,8 @@ router.get(
     readOrder,
 );
 router.get(
-    '/order/by/store/:orderId/:storeId/:userId',
+    '/order/by/:orderId/:userId',
     isAuth,
-    isManager,
     checkOrderAuth,
     readOrder,
 );
@@ -84,18 +81,13 @@ router.put(
     isAuth,
     checkOrderAuth,
     updateStatusForUser,
-    updateEWallet,
     createTransaction,
-    updatePoint,
 );
 router.put(
-    '/order/update/by/store/:orderId/:storeId/:userId',
+    '/order/update/by/:orderId/:userId',
     isAuth,
-    isManager,
     checkOrderAuth,
-    updateEWallet,
     createTransaction,
-    updatePoint,
 );
 router.put(
     '/order/update/for/admin/:orderId/:userId',
@@ -103,10 +95,8 @@ router.put(
     isAdmin,
     checkOrderAuth,
     updateStatusForAdmin,
-    updateEWallet,
     createTransaction,
     updateQuantitySoldProduct,
-    updatePoint,
 );
 
 //params

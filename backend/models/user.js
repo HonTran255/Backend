@@ -89,15 +89,6 @@ const userSchema = new mongoose.Schema(
             type: String,
             default: '/uploads/default.jpg',
         },
-        e_wallet: {
-            type: mongoose.Decimal128,
-            min: 0,
-            default: 0,
-        },
-        point: {
-            type: Number,
-            default: 0,
-        },
         googleId: {
             type: String,
             trim: true,

@@ -301,50 +301,7 @@ exports.updateAvatar = (req, res) => {
         });
 };
 
-/*------
-  COVER
-  ------*/
-exports.updateCover = (req, res) => {
-    const oldpath = req.user.cover;
 
-    User.findOneAndUpdate(
-        { _id: req.user._id },
-        { $set: { cover: req.filepaths[0] } },
-        { new: true },
-    )
-        .exec()
-        .then((user) => {
-            if (!user) {
-                try {
-                    fs.unlinkSync('public' + req.filepaths[0]);
-                } catch {}
-
-                return res.status(500).json({
-                    error: 'User not found',
-                });
-            }
-
-            if (oldpath != '/uploads/default.jpg') {
-                try {
-                    fs.unlinkSync('public' + oldpath);
-                } catch {}
-            }
-
-            return res.json({
-                success: 'Update cover successfully',
-                user: cleanUserLess(user),
-            });
-        })
-        .catch((error) => {
-            try {
-                fs.unlinkSync('public' + req.filepaths[0]);
-            } catch {}
-
-            return res.status(400).json({
-                error: errorHandler(error),
-            });
-        });
-};
 
 /*------
   LIST USERS

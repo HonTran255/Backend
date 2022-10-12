@@ -13,10 +13,11 @@ const userFollowProductRoutes = require('./routes/userFollowProduct');
 const categoryRoutes = require('./routes/category');
 const productRoutes = require('./routes/product');
 const cartRoutes = require('./routes/cart');
-// const deliveryRoutes = require('./routes/delivery');
-// const orderRoutes = require('./routes/order');
-// const transactionRoutes = require('./routes/transaction');
-// const reviewRoutes = require('./routes/review');
+const deliveryRoutes = require('./routes/delivery');
+const orderRoutes = require('./routes/order');
+const transactionRoutes = require('./routes/transaction');
+const reviewRoutes = require('./routes/review');
+const producerRoutes = require('./routes/producer');
 
 //app
 const app = express();
@@ -52,13 +53,15 @@ app.use('/api', userFollowProductRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api', productRoutes);
 app.use('/api', cartRoutes);
-// app.use('/api', deliveryRoutes);
-// app.use('/api', orderRoutes);
-// app.use('/api', transactionRoutes);
-// app.use('/api', reviewRoutes);
+app.use('/api', deliveryRoutes);
+app.use('/api', orderRoutes);
+app.use('/api', transactionRoutes);
+app.use('/api', reviewRoutes);
+app.use('/api', producerRoutes);
 
 //port
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+ 

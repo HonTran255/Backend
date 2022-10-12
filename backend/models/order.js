@@ -8,30 +8,21 @@ const orderSchema = new mongoose.Schema(
             ref: 'User',
             required: true,
         },
-        storeId: {
-            type: ObjectId,
-            ref: 'Store',
-            required: true,
-        },
+
         deliveryId: {
             type: ObjectId,
             ref: 'Delivery',
             required: true,
         },
-        commissionId: {
-            type: ObjectId,
-            ref: 'Commission',
-            required: true,
-        },
         status: {
             type: String,
-            default: 'Not processed',
+            default: '0',
             enum: [
-                'Not processed',
-                'Processing',
-                'Shipped',
-                'Delivered',
-                'Cancelled',
+                '0', //chưa xử lý
+                '1', //Đã xác nhận
+                '2',// Đang giao hàng
+                '3',//Đã giao hàng
+                '4',//Hủy đơn
             ],
         },
         address: {
@@ -42,22 +33,7 @@ const orderSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        amountFromUser: {
-            type: mongoose.Decimal128,
-            required: true,
-            min: 0,
-        },
-        amountFromStore: {
-            type: mongoose.Decimal128,
-            required: true,
-            min: 0,
-        },
-        amountToStore: {
-            type: mongoose.Decimal128,
-            required: true,
-            min: 0,
-        },
-        amountToGD: {
+        amount: {
             type: mongoose.Decimal128,
             required: true,
             min: 0,

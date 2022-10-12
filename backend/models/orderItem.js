@@ -11,15 +11,6 @@ const orderItemSchema = new mongoose.Schema(
             type: ObjectId,
             ref: 'Product',
         },
-        styleValueIds: {
-            type: [
-                {
-                    type: ObjectId,
-                    ref: 'StyleValue',
-                },
-            ],
-            default: [],
-        },
         count: {
             type: Number,
             min: 1,

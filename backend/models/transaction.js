@@ -7,10 +7,6 @@ const transactionSchema = new mongoose.Schema(
             type: ObjectId,
             ref: 'User',
         },
-        storeId: {
-            type: ObjectId,
-            ref: 'Store',
-        },
         isUp: {
             type: Boolean,
             required: true,

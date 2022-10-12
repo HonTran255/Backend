@@ -61,9 +61,6 @@ router.put(
 router.get('/confirm/email/:userId', isAuth, sendConfirmationEmail);
 router.get('/verify/email/:emailCode', verifyEmail);
 
-// router.get('/confirm/phone/:userId', isAuth, sendConfirmationSMS);
-// router.get('/verify/phone/:userId/:phoneCode', verifySMS);
-
 //router params
 router.param('userId', userById);
 

@@ -44,21 +44,7 @@ exports.listOrderItems = (req, res) => {
                     path: 'categoryId',
                     populate: { path: 'categoryId' },
                 },
-            },
-            populate: {
-                path: 'storeId',
-                select: {
-                    _id: 1,
-                    name: 1,
-                    avatar: 1,
-                    isActive: 1,
-                    isOpen: 1,
-                },
-            },
-        })
-        .populate({
-            path: 'styleValueIds',
-            populate: { path: 'styleId' },
+            }
         })
         .exec()
         .then((items) => {
@@ -161,9 +147,7 @@ exports.listOrderByUser = (req, res) => {
                 .skip(skip)
                 .limit(limit)
                 .populate('userId', '_id firstname lastname avatar')
-                .populate('storeId', '_id name avatar isActive isOpen')
                 .populate('deliveryId')
-                .populate('commissionId')
                 .exec()
                 .then((orders) => {
                     return res.json({
@@ -264,9 +248,7 @@ exports.listOrderForAdmin = (req, res) => {
                 .skip(skip)
                 .limit(limit)
                 .populate('userId', '_id firstname lastname avatar')
-                .populate('storeId', '_id name avatar isActive isOpen')
                 .populate('deliveryId')
-                .populate('commissionId')
                 .exec()
                 .then((orders) => {
                     return res.json({
@@ -290,22 +272,18 @@ exports.createOrder = (req, res, next) => {
     const { userId } = req.cart;
     const {
         deliveryId,
-        commissionId,
         address,
         phone,
-        amountFromUser,
-        amountToGD,
+        amount,
         isPaidBefore,
     } = req.body;
 
     if (
         !userId ||
         !deliveryId ||
-        !commissionId ||
         !address ||
         !phone ||
-        !amountFromUser ||
-        !amountToGD
+        !amount
     )
         return res.status(400).json({
             error: 'All fields are required',
@@ -319,11 +297,9 @@ exports.createOrder = (req, res, next) => {
     const order = new Order({
         userId,
         deliveryId,
-        commissionId,
         address,
         phone,
-        amountFromUser,
-        amountToGD,
+        amount,
         isPaidBefore,
     });
 
@@ -349,7 +325,6 @@ exports.createOrderItems = (req, res, next) => {
                 return {
                     orderId: req.order._id,
                     productId: item.productId,
-                    styleValueIds: item.styleValueIds,
                     count: item.count,
                     isDeleted: item.isDeleted,
                 };
@@ -426,9 +401,7 @@ exports.checkOrderAuth = (req, res, next) => {
 exports.readOrder = (req, res) => {
     Order.findOne({ _id: req.order._id })
         .populate('userId', '_id firstname lastname avatar')
-        .populate('storeId', '_id name avatar isActive isOpen')
         .populate('deliveryId')
-        .populate('commissionId')
         .exec()
         .then((order) => {
             if (!order)
@@ -451,7 +424,7 @@ exports.readOrder = (req, res) => {
 // 'Not processed' --> 'Cancelled' (in 1h)
 exports.updateStatusForUser = (req, res, next) => {
     const currentStatus = req.order.status;
-    if (currentStatus !== 'Not processed')
+    if (currentStatus !== '0')
         return res.status(401).json({
             error: 'This order is already processed!',
         });
@@ -465,7 +438,7 @@ exports.updateStatusForUser = (req, res, next) => {
     }
 
     const { status } = req.body;
-    if (status !== 'Cancelled')
+    if (status !== '4')
         return res.status(401).json({
             error: 'This status value is invalid!',
         });
@@ -476,9 +449,7 @@ exports.updateStatusForUser = (req, res, next) => {
         { new: true },
     )
         .populate('userId', '_id firstname lastname avatar')
-        .populate('storeId', '_id name avatar isActive isOpen')
         .populate('deliveryId')
-        .populate('commissionId')
         .exec()
         .then((order) => {
             if (!order)
@@ -522,16 +493,16 @@ exports.updateStatusForUser = (req, res, next) => {
 //'Processing' <-- 'Shipped' <--> 'Delivered'
 exports.updateStatusForAdmin = (req, res, next) => {
     const currentStatus = req.order.status;
-    if (currentStatus !== 'Shipped' && currentStatus !== 'Delivered')
+    if (currentStatus !== '2' && currentStatus !== '3')
         return res.status(401).json({
             error: 'This order is not already processed!',
         });
 
     const { status } = req.body;
     if (
-        status !== 'Processing' &&
-        status !== 'Shipped' &&
-        status !== 'Delivered'
+        status !== '1' &&
+        status !== '2' &&
+        status !== '3'
     )
         return res.status(401).json({
             error: 'This status value is invalid!',
@@ -543,9 +514,7 @@ exports.updateStatusForAdmin = (req, res, next) => {
         { new: true },
     )
         .populate('userId', '_id firstname lastname avatar')
-        .populate('storeId', '_id name avatar isActive isOpen')
         .populate('deliveryId')
-        .populate('commissionId')
         .exec()
         .then((order) => {
             if (!order)
@@ -553,7 +522,7 @@ exports.updateStatusForAdmin = (req, res, next) => {
                     error: 'Not found!',
                 });
 
-            if (status === 'Delivered') {
+            if (status === '3') {
                 //update store e_wallet, product quantity, sold
                 req.createTransaction = {
 
@@ -657,16 +626,3 @@ exports.countOrders = (req, res) => {
     });
 };
 
-exports.updatePoint = async (req, res) => {
-    try {
-        const { userId, point } = req.updatePoint;
-        await User.findOneAndUpdate(
-            { _id: userId },
-            { $inc: { point: +point } },
-        );
-
-        console.log('---UPDATE POINT SUCCESSFULLY---');
-    } catch {
-        console.log('---UPDATE POINT FAILED---');
-    }
-};

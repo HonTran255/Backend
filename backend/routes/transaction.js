@@ -5,15 +5,11 @@ const router = express.Router();
 const {
     isAuth,
     isAdmin,
-    isManager,
-    isOwner,
     verifyPassword,
 } = require('../controllers/auth');
 const { userById, getUserProfile } = require('../controllers/user');
-const { storeById, getStoreProfile } = require('../controllers/store');
 const {
     requestTransaction,
-    updateEWallet,
     createTransaction,
     listTransactions,
 } = require('../controllers/transaction');
@@ -21,9 +17,8 @@ const {
 //routes
 router.get('/transactions/by/user/:userId', isAuth, listTransactions);
 router.get(
-    '/transactions/by/store/:storeId/:userId',
+    '/transactions/by/:userId',
     isAuth,
-    isManager,
     listTransactions,
 );
 router.get(
@@ -37,32 +32,27 @@ router.post(
     isAuth,
     verifyPassword,
     requestTransaction,
-    updateEWallet,
     createTransaction,
     getUserProfile,
 );
 router.post(
-    '/transaction/create/by/store/:storeId/:userId',
+    '/transaction/create/by/:userId',
     isAuth,
     verifyPassword,
-    isOwner,
     requestTransaction,
-    updateEWallet,
     createTransaction,
-    getStoreProfile,
 );
-// router.post(
-//     '/transaction/create/for/admin/:userId',
-//     isAuth,
-//     verifyPassword,
-//     isAdmin,
-//     requestTransaction,
-//     updateEWallet,
-//     createTransaction,
-// );
+router.post(
+    '/transaction/create/for/admin/:userId',
+    isAuth,
+    verifyPassword,
+    isAdmin,
+    requestTransaction,
+    createTransaction,
+);
 
 //params
-router.param('storeId', storeById);
+
 router.param('userId', userById);
 
 module.exports = router;

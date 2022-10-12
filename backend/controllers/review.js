@@ -1,6 +1,5 @@
 const Review = require('../models/review');
 const Product = require('../models/product');
-const Store = require('../models/store');
 const { errorHandler } = require('../helpers/errorHandler');
 const { cleanUserLess } = require('../helpers/userHandler');
 
@@ -41,9 +40,9 @@ exports.checkReview = (req, res) => {
 };
 
 exports.createReview = (req, res, next) => {
-    const { content, rating, storeId, productId, orderId } = req.body;
+    const { content, rating, productId, orderId } = req.body;
 
-    if (!rating || !storeId || !productId || !orderId)
+    if (!rating || !productId || !orderId)
         return res.status(400).json({
             error: 'All fields are required',
         });
@@ -52,7 +51,6 @@ exports.createReview = (req, res, next) => {
         content,
         rating,
         userId: req.user._id,
-        storeId,
         productId,
         orderId,
     });
@@ -114,7 +112,6 @@ exports.removeReview = (req, res, next) => {
                 req.body = {
                     ...req.body,
                     productId: req.review.productId,
-                    storeId: req.review.storeId,
                 };
                 next();
                 return res.json({
@@ -127,7 +124,7 @@ exports.removeReview = (req, res, next) => {
 };
 
 exports.updateRating = (req, res) => {
-    const { productId, storeId } = req.body;
+    const { productId} = req.body;
     Review.aggregate(
         [
             {
@@ -169,45 +166,6 @@ exports.updateRating = (req, res) => {
             }
         },
     );
-
-    Review.aggregate(
-        [
-            {
-                $group: {
-                    _id: '$storeId',
-                    rating: {
-                        $sum: '$rating',
-                    },
-                    count: { $sum: 1 },
-                },
-            },
-        ],
-        (error, result) => {
-            if (error) console.log(error);
-            else {
-                const temp = result.filter((r) => r._id.equals(storeId))[0];
-                const rating = temp
-                    ? (
-                          parseFloat(temp.rating) / parseFloat(temp.count)
-                      ).toFixed()
-                    : 3;
-                Store.findOneAndUpdate({ _id: storeId }, { $set: { rating } })
-                    .exec()
-                    .then((store) => {
-                        if (!store)
-                            console.log('---UPDATE STORE RATING FAILED---');
-                        else
-                            console.log(
-                                '---UPDATE STORE RATING SUCCESSFULLY---',
-                                rating,
-                            );
-                    })
-                    .catch((error) => {
-                        console.log('---UPDATE STORE RATING FAILED---');
-                    });
-            }
-        },
-    );
 };
 
 exports.listReviews = (req, res) => {
@@ -236,11 +194,6 @@ exports.listReviews = (req, res) => {
     if (req.query.productId) {
         filter.productId = req.query.productId;
         filterArgs.productId = req.query.productId;
-    }
-
-    if (req.query.storeId) {
-        filter.storeId = req.query.storeId;
-        filterArgs.storeId = req.query.storeId;
     }
 
     if (req.query.userId) {
@@ -282,7 +235,6 @@ exports.listReviews = (req, res) => {
             .limit(limit)
             .populate('userId', '_id firstname lastname avatar')
             .populate('productId', '_id name listImages isActive isSelling')
-            .populate('storeId', '_id name avatar isActive isOpen')
             .exec()
             .then((reviews) => {
                 return res.json({
