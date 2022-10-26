@@ -13,11 +13,6 @@ const reviewSchema = new mongoose.Schema(
             ref: 'Product',
             required: true,
         },
-        storeId: {
-            type: ObjectId,
-            ref: 'Store',
-            required: true,
-        },
         orderId: {
             type: ObjectId,
             ref: 'Order',

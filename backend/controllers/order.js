@@ -3,7 +3,6 @@ const OrderItem = require('../models/orderItem');
 const Cart = require('../models/cart');
 const CartItem = require('../models/cartItem');
 const Product = require('../models/product');
-const User = require('../models/user');
 const { cleanUserLess } = require('../helpers/userHandler');
 const { errorHandler } = require('../helpers/errorHandler');
 
@@ -288,6 +287,7 @@ exports.createOrder = (req, res, next) => {
         return res.status(400).json({
             error: 'All fields are required',
         });
+        
 
     if (!userId.equals(req.user._id))
         return res.status(400).json({
@@ -296,8 +296,8 @@ exports.createOrder = (req, res, next) => {
 
     const order = new Order({
         userId,
-        deliveryId,
         address,
+        deliveryId,
         phone,
         amount,
         isPaidBefore,
@@ -486,17 +486,7 @@ exports.updateStatusForUser = (req, res, next) => {
         });
 };
 
-//'Not processed' <--> 'Processing' --> 'Shipped'
-//'Not processed' <--> 'Processing' --> 'Cancelled'
-
-
-//'Processing' <-- 'Shipped' <--> 'Delivered'
 exports.updateStatusForAdmin = (req, res, next) => {
-    const currentStatus = req.order.status;
-    if (currentStatus !== '2' && currentStatus !== '3')
-        return res.status(401).json({
-            error: 'This order is not already processed!',
-        });
 
     const { status } = req.body;
     if (
@@ -505,7 +495,7 @@ exports.updateStatusForAdmin = (req, res, next) => {
         status !== '3'
     )
         return res.status(401).json({
-            error: 'This status value is invalid!',
+            error: 'Đơn hàng đã bị hủy!!',
         });
 
     Order.findOneAndUpdate(
@@ -521,22 +511,7 @@ exports.updateStatusForAdmin = (req, res, next) => {
                 return res.status(500).json({
                     error: 'Not found!',
                 });
-
-            if (status === '3') {
-                //update store e_wallet, product quantity, sold
-                req.createTransaction = {
-
-                    isUp: true,
-
-                };
-
-                req.updatePoint = {
-                    userId: req.order.userId,
-
-                    point: 1,
-                };
-                next();
-            } else
+            else
                 return res.json({
                     success: 'update order successfully',
                     order,

@@ -8,7 +8,6 @@ const orderSchema = new mongoose.Schema(
             ref: 'User',
             required: true,
         },
-
         deliveryId: {
             type: ObjectId,
             ref: 'Delivery',
