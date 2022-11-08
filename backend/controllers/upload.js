@@ -12,7 +12,7 @@ exports.upload = (req, res, next) => {
         if (error) {
             // console.log('---UPLOAD IMAGE FAILED---');
             return res.status(400).json({
-                error: 'Photo could not be up load',
+                error: 'Ảnh không được tải lên',
             });
         }
 

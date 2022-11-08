@@ -8,7 +8,7 @@ exports.productById = (req, res, next, id) => {
     Product.findById(id, (error, product) => {
         if (error || !product) {
             return res.status(404).json({
-                error: 'Product not found',
+                error: 'Không tìm thấy sản phẩm',
             });
         }
 
@@ -20,7 +20,7 @@ exports.productById = (req, res, next, id) => {
 exports.getProduct = (req, res) => {
     if (!req.product.isActive)
         return res.status(404).json({
-            error: 'Active/Selling Product not found',
+            error: 'Không tìm thấy sản phẩm',
         });
 
     Product.findOne({ _id: req.product._id, isActive: true })
@@ -42,18 +42,18 @@ exports.getProduct = (req, res) => {
         .then((product) => {
             if (!product) {
                 return res.status(500).json({
-                    error: 'Product not found',
+                    error: 'Không tìm thấy sản phẩm',
                 });
             }
 
             return res.json({
-                success: 'Get product successfully',
+                success: 'Lấy sản phẩm thành công',
                 product,
             });
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'Product not found',
+                error: 'Không tìm thấy sản phẩm',
             });
         });
 };
@@ -87,7 +87,7 @@ exports.createProduct = (req, res) => {
         } catch {}
 
         return res.status(400).json({
-            error: 'All fields are required',
+            error: 'Thiếu dữ liệu',
         });
     }
 
@@ -117,7 +117,7 @@ exports.createProduct = (req, res) => {
         }
 
         return res.json({
-            success: 'Creating product successfully',
+            success: 'Tạo sản phẩm thành công',
             product,
         });
     });
@@ -144,7 +144,7 @@ exports.updateProduct = (req, res) => {
         !producerId
     ) {
         return res.status(400).json({
-            error: 'All fields are required',
+            error: 'Thiếu dữ liệu',
         });
     }
 
@@ -172,11 +172,11 @@ exports.updateProduct = (req, res) => {
         .then((product) => {
             if (!product)
                 return res.status(500).json({
-                    error: 'Product not found',
+                    error: 'Không tìm thấy sản phẩm',
                 });
 
             return res.json({
-                success: 'Update product successfully',
+                success: 'Cập nhật sản phẩm thành công',
                 product,
             });
         })
@@ -201,7 +201,7 @@ exports.activeAllProduct = (req, res) => {
         .exec()
         .then(() => {
             return res.json({
-                success: 'Active/InActive products successfully',
+                success: 'Cập nhật thành công',
                 store: req.store,
             });
         })
@@ -241,12 +241,12 @@ exports.activeProduct = (req, res) => {
         .then((product) => {
             if (!product) {
                 return res.status(500).json({
-                    error: 'product not found',
+                    error: 'Không tìm thấy sản phẩm',
                 });
             }
 
             return res.json({
-                success: 'Active/InActive product status successfully',
+                success: 'Cập nhật trạng thái thành công',
                 product,
             });
         })
@@ -270,7 +270,7 @@ exports.addToListImages = (req, res) => {
         } catch {}
 
         return res.status(400).json({
-            error: 'The limit is 6 images',
+            error: 'Giới hạn 6 ảnh',
         });
     }
 
@@ -301,12 +301,12 @@ exports.addToListImages = (req, res) => {
                 } catch {}
 
                 return res.status(500).json({
-                    error: 'product not found',
+                    error: 'Không tìm thấy sản phẩm',
                 });
             }
 
             return res.json({
-                success: 'Add to list image successfully',
+                success: 'Thêm hình ảnh thành công',
                 product,
             });
         })
@@ -327,7 +327,7 @@ exports.updateListImages = (req, res) => {
 
     if (index == -1 || !image)
         return res.status(400).json({
-            error: 'Update list image failed',
+            error: 'Cập nhật hình ảnh thất bại',
         });
 
     let listImages = req.product.listImages;
@@ -337,7 +337,7 @@ exports.updateListImages = (req, res) => {
         } catch {}
 
         return res.status(404).json({
-            error: 'Image not found',
+            error: 'Không tìm thấy ảnh',
         });
     }
 
@@ -371,7 +371,7 @@ exports.updateListImages = (req, res) => {
                 } catch {}
 
                 return res.status(500).json({
-                    error: 'Product not found',
+                    error: 'Không tìm thấy sản phẩm',
                 });
             }
 
@@ -382,7 +382,7 @@ exports.updateListImages = (req, res) => {
             }
 
             return res.json({
-                success: 'Update list images successfully',
+                success: 'Cập nhật hình ảnh thành công',
                 product,
             });
         })
@@ -401,20 +401,20 @@ exports.removefromListImages = (req, res) => {
     const index = req.query.index ? parseInt(req.query.index) : -1;
     if (index == -1) {
         return res.status(400).json({
-            error: 'Remove from list images failed',
+            error: 'Xóa ảnh thất bại',
         });
     }
 
     let listImages = req.product.listImages;
     if (index >= listImages.length) {
         return res.status(404).json({
-            error: 'Images not found',
+            error: 'Không tìm thấy ảnh',
         });
     }
 
     if (listImages.length <= 1) {
         return res.status(400).json({
-            error: 'listImages must not be null',
+            error: 'Không được để trống',
         });
     }
 
@@ -448,12 +448,12 @@ exports.removefromListImages = (req, res) => {
         .then((product) => {
             if (!product) {
                 return res.status(500).json({
-                    error: 'Product not found',
+                    error: 'Không tìm thấy sản phẩm',
                 });
             }
 
             return res.json({
-                success: 'Remove from list images successfully',
+                success: 'Xóa ảnh thành công',
                 product,
             });
         })
@@ -647,7 +647,7 @@ exports.listProducts = (req, res) => {
     Product.countDocuments(filterArgs, (error, count) => {
         if (error) {
             return res.status(404).json({
-                error: 'Products not found',
+                error: 'Không tìm thấy sản phẩm',
             });
         }
 
@@ -661,7 +661,7 @@ exports.listProducts = (req, res) => {
 
         if (count <= 0) {
             return res.json({
-                success: 'Load list products successfully',
+                success: 'Tải danh sách sản phẩm thành công',
                 filter,
                 size,
                 products: [],
@@ -689,7 +689,7 @@ exports.listProducts = (req, res) => {
             .exec()
             .then((products) => {
                 return res.json({
-                    success: 'Load list products successfully',
+                    success: 'Tải danh sách sản phẩm thành công',
                     filter,
                     size,
                     products,
@@ -697,7 +697,7 @@ exports.listProducts = (req, res) => {
             })
             .catch((error) => {
                 return res.status(500).json({
-                    error: 'Load list products failed',
+                    error: 'Tải danh sách sản phẩm thất bại',
                 });
             });
     });
@@ -747,7 +747,7 @@ exports.listProductsForAdmin = (req, res) => {
     Product.countDocuments(filterArgs, (error, count) => {
         if (error) {
             return res.status(404).json({
-                error: 'Products not found',
+                error: 'Không tìm thấy',
             });
         }
 
@@ -761,7 +761,7 @@ exports.listProductsForAdmin = (req, res) => {
 
         if (count <= 0) {
             return res.json({
-                success: 'Load list products successfully',
+                success: 'Tải sản phẩm thành công',
                 filter,
                 size,
                 products: [],
@@ -789,7 +789,7 @@ exports.listProductsForAdmin = (req, res) => {
             .exec()
             .then((products) => {
                 return res.json({
-                    success: 'Load list products successfully',
+                    success: 'Tải danh sách sản phẩm thành công',
                     filter,
                     size,
                     products,
@@ -797,7 +797,7 @@ exports.listProductsForAdmin = (req, res) => {
             })
             .catch((error) => {
                 return res.status(500).json({
-                    error: 'Load list products failed',
+                    error: 'Tải danh sách sản phẩm thất bại',
                 });
             });
     });

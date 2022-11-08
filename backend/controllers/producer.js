@@ -22,17 +22,17 @@ exports.getproducer = (req, res) => {
         .then((producer) => {
             if (!producer)
                 return res.status(500).json({
-                    error: 'Load producer failed',
+                    error: 'Tải nhà sản xuất thất bại',
                 });
 
             return res.json({
-                success: 'Load producer successfully',
+                success: 'Tải nhà sản xuất thành công',
                 producer: producer,
             });
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'Load producer failed',
+                error: 'Tải nhà sản xuất thất bại',
             });
         });
 };
@@ -50,13 +50,13 @@ exports.checkproducer = (req, res, next) => {
                         producer.producerId.producerId != null)
                 ) {
                     return res.status(400).json({
-                        error: 'producerId invalid',
+                        error: 'Không tìm thấy',
                     });
                 } else next();
             })
             .catch((error) => {
                 return res.status(400).json({
-                    error: 'producerId invalid',
+                    error: 'Không tìm thấy',
                 });
             });
     } else next();
@@ -83,13 +83,13 @@ exports.updateproducer = (req, res) => {
     if (!producerId) producerId = null;
     else if (producerId == req.producer._id) {
         return res.status(400).json({
-            error: 'producerId invalid',
+            error: 'Không tìm thấy',
         });
     }
 
     if (!name) {
         return res.status(400).json({
-            error: 'All fields are required',
+            error: 'Thiếu dữ liệu',
         });
     }
 
@@ -111,7 +111,7 @@ exports.updateproducer = (req, res) => {
             }
 
             return res.json({
-                success: 'Update producer successfully',
+                success: 'Cập nhật thành công',
                 producer,
             });
         })
@@ -136,17 +136,17 @@ exports.removeproducer = (req, res) => {
         .then((producer) => {
             if (!producer) {
                 return res.status(404).json({
-                    error: 'producer not found',
+                    error: 'Không tìm thấy',
                 });
             }
 
             return res.json({
-                success: 'Remove producer successfully',
+                success: 'Xóa thành công',
             });
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'producer not found',
+                error: 'Không tìm thấy',
             });
         });
 };
@@ -193,7 +193,7 @@ exports.listActiveProducers = (req, res) => {
     Producer.countDocuments(filterArgs, (error, count) => {
         if (error) {
             return res.status(404).json({
-                error: 'List active producers not found',
+                error: 'Không tìm thấy',
             });
         }
 
@@ -207,7 +207,7 @@ exports.listActiveProducers = (req, res) => {
 
         if (count <= 0) {
             return res.json({
-                success: 'Load list active producers successfully',
+                success: 'Tải danh sách thành công',
                 filter,
                 size,
                 producers: [],
@@ -225,7 +225,7 @@ exports.listActiveProducers = (req, res) => {
             .exec()
             .then((producers) => {
                 return res.json({
-                    success: 'Load list active producers successfully',
+                    success: 'Tải danh sách thành công',
                     filter,
                     size,
                     producers,
@@ -233,7 +233,7 @@ exports.listActiveProducers = (req, res) => {
             })
             .catch((error) => {
                 return res.status(500).json({
-                    error: 'Load list active producers failed',
+                    error: 'Tải danh sách thất bại',
                 });
             });
     });
@@ -280,7 +280,7 @@ exports.listProducers = (req, res) => {
     Producer.countDocuments(filterArgs, (error, count) => {
         if (error) {
             return res.status(404).json({
-                error: 'List categories not found',
+                error: 'Không tìm thấy danh mục',
             });
         }
 
@@ -294,7 +294,7 @@ exports.listProducers = (req, res) => {
 
         if (count <= 0) {
             return res.json({
-                success: 'Load list categories successfully',
+                success: 'Tải danh sách danh mục thành công',
                 filter,
                 size,
                 categories: [],
@@ -312,7 +312,7 @@ exports.listProducers = (req, res) => {
             .exec()
             .then((producers) => {
                 return res.json({
-                    success: 'Load list categories successfully',
+                    success: 'Tải danh sách danh mục thành công',
                     filter,
                     size,
                     producers,
@@ -320,7 +320,7 @@ exports.listProducers = (req, res) => {
             })
             .catch((error) => {
                 return res.status(500).json({
-                    error: 'Load list categories failed',
+                    error: 'Tải danh sách danh mục thất bại',
                 });
             });
     });

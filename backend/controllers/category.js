@@ -25,17 +25,17 @@ exports.getCategory = (req, res) => {
         .then((category) => {
             if (!category)
                 return res.status(500).json({
-                    error: 'Load category failed',
+                    error: 'Tải danh mục thất bại',
                 });
 
             return res.json({
-                success: 'Load category successfully',
+                success: 'Tải danh mục thành công',
                 category: category,
             });
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'Load category failed',
+                error: 'Tải danh mục thành công',
             });
         });
 };
@@ -57,7 +57,7 @@ exports.checkCategory = (req, res, next) => {
                     } catch {}
 
                     return res.status(400).json({
-                        error: 'categoryId invalid',
+                        error: 'Không xác định',
                     });
                 } else next();
             })
@@ -67,7 +67,7 @@ exports.checkCategory = (req, res, next) => {
                 } catch {}
 
                 return res.status(400).json({
-                    error: 'categoryId invalid',
+                    error: 'Không xác định',
                 });
             });
     } else next();
@@ -92,7 +92,7 @@ exports.checkCategoryChild = (req, res, next) => {
                 } catch (err) {}
 
                 return res.status(400).json({
-                    error: 'categoryId invalid',
+                    error: 'Không xác định',
                 });
             }
         })
@@ -108,7 +108,7 @@ exports.checkListCategoriesChild = (req, res, next) => {
             if (!category) next();
             else
                 return res.status(400).json({
-                    error: 'categoryIds invalid',
+                    error: 'Không xác định',
                 });
         })
         .catch((error) => next());
@@ -123,7 +123,7 @@ exports.createCategory = (req, res) => {
         } catch {}
 
         return res.status(400).json({
-            error: 'All fields are required',
+            error: 'Thiếu dữ liệu',
         });
     }
 
@@ -145,7 +145,7 @@ exports.createCategory = (req, res) => {
         }
 
         return res.json({
-            success: 'Creating category successfully',
+            success: 'Tạo danh mục thành công',
             category,
         });
     });
@@ -157,7 +157,7 @@ exports.updateCategory = (req, res) => {
     if (!categoryId) categoryId = null;
     else if (categoryId == req.category._id) {
         return res.status(400).json({
-            error: 'categoryId invalid',
+            error: 'Không xác định',
         });
     }
 
@@ -167,7 +167,7 @@ exports.updateCategory = (req, res) => {
         } catch {}
 
         return res.status(400).json({
-            error: 'All fields are required',
+            error: 'Thiếu dữ liệu',
         });
     }
 
@@ -193,7 +193,7 @@ exports.updateCategory = (req, res) => {
             }
 
             return res.json({
-                success: 'Update category successfully',
+                success: 'Cập nhật danh mục thành công',
                 category,
             });
         })
@@ -222,17 +222,17 @@ exports.removeCategory = (req, res) => {
         .then((category) => {
             if (!category) {
                 return res.status(404).json({
-                    error: 'category not found',
+                    error: 'Không tim thấy danh mục',
                 });
             }
 
             return res.json({
-                success: 'Remove category successfully',
+                success: 'Xóa danh mục thành công',
             });
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'category not found',
+                error: 'Không tim thấy danh mục',
             });
         });
 };
@@ -251,17 +251,17 @@ exports.restoreCategory = (req, res) => {
         .then((category) => {
             if (!category) {
                 return res.status(404).json({
-                    error: 'category not found',
+                    error: 'Không tìm thấy danh mục',
                 });
             }
 
             return res.json({
-                success: 'Restore category successfully',
+                success: 'Hoàn danh mục thành công',
             });
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'category not found',
+                error: 'Không tìm thấy danh mục',
             });
         });
 };
@@ -308,7 +308,7 @@ exports.listActiveCategories = (req, res) => {
     Category.countDocuments(filterArgs, (error, count) => {
         if (error) {
             return res.status(404).json({
-                error: 'List active categories not found',
+                error: 'Không tìm thấy danh sách danh mục',
             });
         }
 
@@ -322,7 +322,7 @@ exports.listActiveCategories = (req, res) => {
 
         if (count <= 0) {
             return res.json({
-                success: 'Load list active categories successfully',
+                success: 'Tải danh mục thành công',
                 filter,
                 size,
                 categories: [],
@@ -340,7 +340,7 @@ exports.listActiveCategories = (req, res) => {
             .exec()
             .then((categories) => {
                 return res.json({
-                    success: 'Load list active categories successfully',
+                    success: 'Tải danh mục thành công',
                     filter,
                     size,
                     categories,
@@ -348,7 +348,7 @@ exports.listActiveCategories = (req, res) => {
             })
             .catch((error) => {
                 return res.status(500).json({
-                    error: 'Load list active categories failed',
+                    error: 'Tải danh mục thất bại',
                 });
             });
     });
@@ -395,7 +395,7 @@ exports.listCategories = (req, res) => {
     Category.countDocuments(filterArgs, (error, count) => {
         if (error) {
             return res.status(404).json({
-                error: 'List categories not found',
+                error: 'Không tìm thấy danh mục',
             });
         }
 
@@ -409,7 +409,7 @@ exports.listCategories = (req, res) => {
 
         if (count <= 0) {
             return res.json({
-                success: 'Load list categories successfully',
+                success: 'Tải danh mục thành công',
                 filter,
                 size,
                 categories: [],
@@ -427,7 +427,7 @@ exports.listCategories = (req, res) => {
             .exec()
             .then((categories) => {
                 return res.json({
-                    success: 'Load list categories successfully',
+                    success: 'Tải danh mục thành công',
                     filter,
                     size,
                     categories,
@@ -435,7 +435,7 @@ exports.listCategories = (req, res) => {
             })
             .catch((error) => {
                 return res.status(500).json({
-                    error: 'Load list categories failed',
+                    error: 'Tải danh mục thất bại',
                 });
             });
     });

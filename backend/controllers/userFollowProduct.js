@@ -14,7 +14,7 @@ exports.followProduct = (req, res) => {
         .then((follow) => {
             if (!follow)
                 return res.status(400).json({
-                    error: 'Follow is already exists',
+                    error: 'Đã yêu thích',
                 });
             else
                 Product.findOne({ _id: productId })
@@ -29,19 +29,19 @@ exports.followProduct = (req, res) => {
                     .then((product) => {
                         if (!product) {
                             return res.status(404).json({
-                                error: 'product not found',
+                                error: 'Không tìm thấy sản phẩm',
                             });
                         }
 
                         return res.json({
-                            success: 'Follow product successfully',
+                            success: 'Đã yêu thích',
                             product,
                         });
                     });
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'Follow product failed',
+                error: 'Có lỗi xảy ra',
             });
         });
 };
@@ -59,7 +59,7 @@ exports.unfollowProduct = (req, res) => {
         .then((follow) => {
             if (!follow)
                 return res.status(400).json({
-                    error: 'Follow is already exists',
+                    error: 'Đã yêu thích',
                 });
             else
                 Product.findOne({ _id: productId })
@@ -74,19 +74,19 @@ exports.unfollowProduct = (req, res) => {
                     .then((product) => {
                         if (!product) {
                             return res.status(404).json({
-                                error: 'product not found',
+                                error: 'Không tìm thấy sản phẩm',
                             });
                         }
 
                         return res.json({
-                            success: 'Follow product successfully',
+                            success: 'Đã yêu thích',
                             product,
                         });
                     });
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'Follow product failed',
+                error: 'Có lỗi xảy ra',
             });
         });
 };
@@ -100,17 +100,17 @@ exports.checkFollowingProduct = (req, res) => {
         .then((follow) => {
             if (!follow) {
                 return res.json({
-                    error: 'Following product not found',
+                    error: 'Following Không tìm thấy sản phẩm',
                 });
             } else {
                 return res.json({
-                    success: 'Following product',
+                    success: 'Đang yêu thích',
                 });
             }
         })
         .catch((error) => {
             return res.status(404).json({
-                error: 'Following product not found',
+                error: 'Không tìm thấy sản phẩm',
             });
         });
 };
@@ -122,12 +122,12 @@ exports.getNumberOfFollowersForProduct = (req, res) => {
         (error, count) => {
             if (error) {
                 return res.status(404).json({
-                    error: 'Following product not found',
+                    error: 'Không tìm thấy sản phẩm',
                 });
             }
 
             return res.json({
-                success: 'get product number of followers successfully',
+                success: 'Đếm thành công',
                 count,
             });
         },

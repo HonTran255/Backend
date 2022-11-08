@@ -4,28 +4,28 @@ const signup = () => [
     check('firstname')
         .not()
         .isEmpty()
-        .withMessage('Firstname is required')
+        .withMessage('Hãy nhập họ')
         .isLength({ max: 32 })
-        .withMessage('Firstname can contain up to 32 characters')
+        .withMessage('Họ có thể chứa 32 ký tự')
         .matches(
             /^[A-Za-záàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệóòỏõọôốồổỗộơớờởỡợíìỉĩịúùủũụưứừửữựýỳỷỹỵđÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬÉÈẺẼẸÊẾỀỂỄỆÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÍÌỈĨỊÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴĐ\d\s_'-]*$/,
         )
         .withMessage(
-            "Firstname can contain numbers, some special characters such as _, ', - and space",
+            "Họ có thể chứa số hoặc một số ký tự đặc biệt như _, ', - và khoảng cách",
         )
         .custom(checkStoreName),
 
     check('lastname')
         .not()
         .isEmpty()
-        .withMessage('Lastname is required')
+        .withMessage('Hãy nhập tên')
         .isLength({ max: 32 })
-        .withMessage('Lastname can contain up to 32 characters')
+        .withMessage('Tên có thể chứa 32 ký tự')
         .matches(
             /^[A-Za-záàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệóòỏõọôốồổỗộơớờởỡợíìỉĩịúùủũụưứừửữựýỳỷỹỵđÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬÉÈẺẼẸÊẾỀỂỄỆÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÍÌỈĨỊÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴĐ\d\s_'-]*$/,
         )
         .withMessage(
-            "Lastname can contain numbers, some special characters such as _, ', - and space",
+            "Tên có thể chứa số hoặc một số ký tự đặc biệt như _, ', - và khoảng cách",
         )
         .custom(checkStoreName),
 
@@ -48,18 +48,18 @@ const signup = () => [
                     .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
             ],
         ],
-        'Email or phone number must be provided at least one (email must contain @ and phone number must contain 10 or 11 numbers)',
+        'Hãy nhập email hoặc số điện thoại',
     ),
 
     check('password')
         .not()
         .isEmpty()
-        .withMessage('Password is required')
+        .withMessage('Hãy nhập mật khẩu')
         .matches(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
         )
         .withMessage(
-            'Password must contain at least 6 characters, at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character such as @, $, !, %, *, ?, &',
+            'Mật khẩu phải chứa ít nhất 6 ký tự, 1 ký tự thường, 1 ký tự hoa, 1 chữ số và 1 ký tự đặc biệt như @, $, !, %, *, ?, &',
         ),
 ];
 
@@ -83,13 +83,13 @@ const signin = () => [
                     .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
             ],
         ],
-        'Email or phone number must be provided at least one (email must contain @ and phone number must contain 10 or 11 numbers)',
+        'Hãy nhập email hoặc số điện thoại',
     ),
 
     check('password')
         .not()
         .isEmpty()
-        .withMessage('Password is required')
+        .withMessage('Hãy nhập mật khẩu')
         .matches(/^[A-Za-z\d@$!%*?&]*$/)
         .withMessage('Password contains invalid characters'),
 ];
@@ -114,7 +114,7 @@ const forgotPassword = () => [
                     .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
             ],
         ],
-        'Email or phone number must be provided at least one (email must contain @ and phone number must contain 10 or 11 numbers)',
+        'Hãy nhập email hoặc số điện thoại',
     ),
 ];
 
@@ -122,12 +122,12 @@ const changePassword = () => [
     check('password')
         .not()
         .isEmpty()
-        .withMessage('Password is required')
+        .withMessage('Hãy nhập mật khẩu')
         .matches(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
         )
         .withMessage(
-            'Password must contain at least 6 characters, at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character such as @, $, !, %, *, ?, &',
+            'Mật khẩu phải chứa ít nhất 6 ký tự, 1 ký tự thường, 1 ký tự hoa, 1 chữ số và 1 ký tự đặc biệt như @, $, !, %, *, ?, &',
         ),
 ];
 
@@ -135,18 +135,18 @@ const authSocial = () => [
     check('firstname')
         .not()
         .isEmpty()
-        .withMessage('Firstname is required')
+        .withMessage('Hãy nhập họ')
         .isLength({ max: 32 })
-        .withMessage('Firstname can contain up to 32 characters'),
+        .withMessage('Họ có thể dài 32 ký tự'),
 
     check('lastname')
         .not()
         .isEmpty()
         .withMessage('Lastname is required')
         .isLength({ max: 32 })
-        .withMessage('Lastname can contain up to 32 characters'),
+        .withMessage('Tên có thể dài 32 ký tự'),
 
-    check('email').not().isEmpty().withMessage('Email is required'),
+    check('email').not().isEmpty().withMessage('Hãy nhập email'),
 ];
 
 //custom validator
@@ -161,7 +161,7 @@ const checkStoreName = (val) => {
     });
 
     if (!flag) {
-        return Promise.reject('Name contains invalid characters');
+        return Promise.reject('Tên chứa ký tự không hợp lệ');
     }
 
     return true;

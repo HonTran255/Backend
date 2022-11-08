@@ -10,7 +10,7 @@ exports.userById = (req, res, next, id) => {
     User.findById(id, (error, user) => {
         if (error || !user) {
             return res.status(404).json({
-                error: 'User not found',
+                error: 'Không tìm thấy người dùng',
             });
         }
 
@@ -21,7 +21,7 @@ exports.userById = (req, res, next, id) => {
 
 exports.getUser = (req, res) => {
     return res.json({
-        success: 'Get user successfully',
+        success: 'Lấy người dùng thành công',
         user: cleanUser(req.user),
     });
 };
@@ -32,18 +32,18 @@ exports.getUserProfile = (req, res) => {
         .then((user) => {
             if (!user) {
                 return res.status(404).json({
-                    error: 'User not found',
+                    error: 'Không tìm thấy người dùng',
                 });
             }
 
             return res.json({
-                success: 'Get user profile successfully',
+                success: 'Lấy thông tin người dùng thành công',
                 user: cleanUserLess(user),
             });
         })
         .catch((error) => {
             return res.status(404).json({
-                error: 'User not found',
+                error: 'Không tìm thấy người dùng',
             });
         });
 };
@@ -81,12 +81,12 @@ exports.updateProfile = (req, res) => {
         .then((user) => {
             if (!user) {
                 return res.status(500).json({
-                    error: 'User not found',
+                    error: 'Không tìm thấy người dùng',
                 });
             }
 
             return res.json({
-                success: 'Update user successfully.',
+                success: 'Cập nhật người dùng thành công.',
                 user: cleanUserLess(user),
             });
         })
@@ -111,12 +111,12 @@ exports.updatePassword = (req, res) => {
         .then((user) => {
             if (!user) {
                 return res.status(500).json({
-                    error: 'User not found',
+                    error: 'Không tìm thấy người dùng',
                 });
             }
 
             return res.json({
-                success: 'Update new password successfully',
+                success: 'Cập nhật mật khẩu thành công',
             });
         })
         .catch((error) => {
@@ -134,7 +134,7 @@ exports.addAddress = (req, res) => {
 
     if (addresses.length >= 6) {
         return res.status(400).json({
-            error: 'The limit is 6 addresses',
+            error: 'Giới hạn 6 ảnh',
         });
     }
 
@@ -150,12 +150,12 @@ exports.addAddress = (req, res) => {
         .then((user) => {
             if (!user) {
                 return res.status(500).json({
-                    error: 'User not found',
+                    error: 'Không tìm thấy người dùng',
                 });
             }
 
             return res.json({
-                success: 'Add address successfully',
+                success: 'Thêm địa chỉ thành công',
                 user: cleanUserLess(user),
             });
         })
@@ -173,19 +173,19 @@ exports.updateAddress = (req, res) => {
             : -1;
     if (addressIndex == -1)
         return res.status(400).json({
-            error: 'index not found',
+            error: 'Không tìm thấy danh sách',
         });
 
     let addresses = req.user.addresses;
     if (addresses.length <= addressIndex)
         return res.status(404).json({
-            error: 'Address not found',
+            error: 'Địa chỉ không tồn tại',
         });
 
     const index = addresses.indexOf(req.body.address.trim());
     if (index != -1 && index != addressIndex)
         return res.status(400).json({
-            error: 'Address already exists',
+            error: 'Đại chỉ đã tồn tại',
         });
 
     addresses.splice(addressIndex, 1, req.body.address.trim());
@@ -198,12 +198,12 @@ exports.updateAddress = (req, res) => {
         .then((user) => {
             if (!user) {
                 return res.status(500).json({
-                    error: 'User not found',
+                    error: 'Không tìm thấy người dùng',
                 });
             }
 
             return res.json({
-                success: 'Update address successfully',
+                success: 'Cập nhật địa chỉ thành công',
                 user: cleanUserLess(user),
             });
         })
@@ -221,13 +221,13 @@ exports.removeAddress = (req, res) => {
             : -1;
     if (addressIndex == -1)
         return res.status(400).json({
-            error: 'index not found',
+            error: 'Không tìm thấy',
         });
 
     let addresses = req.user.addresses;
     if (addresses.length <= addressIndex)
         return res.status(404).json({
-            error: 'Address not found',
+            error: 'Không tìm thấy địa chỉ',
         });
 
     addresses.splice(addressIndex, 1);
@@ -240,12 +240,12 @@ exports.removeAddress = (req, res) => {
         .then((user) => {
             if (!user) {
                 return res.status(500).json({
-                    error: 'User not found',
+                    error: 'Không tìm thấy người dùng',
                 });
             }
 
             return res.json({
-                success: 'Remove address successfully',
+                success: 'Xóa địa chỉ thành công',
                 user: cleanUserLess(user),
             });
         })
@@ -275,7 +275,7 @@ exports.updateAvatar = (req, res) => {
                 } catch {}
 
                 return res.status(500).json({
-                    error: 'User not found',
+                    error: 'Không tìm thấy người dùng',
                 });
             }
 
@@ -286,7 +286,7 @@ exports.updateAvatar = (req, res) => {
             }
 
             return res.json({
-                success: 'Update avatar successfully',
+                success: 'Cập nhật ảnh đại diện thành công',
                 user: cleanUserLess(user),
             });
         })
@@ -345,7 +345,7 @@ exports.listUser = (req, res) => {
     User.countDocuments(filterArgs, (error, count) => {
         if (error) {
             return res.status(404).json({
-                error: 'Users not found',
+                error: 'Không tìm thấy người dùng',
             });
         }
 
@@ -359,7 +359,7 @@ exports.listUser = (req, res) => {
 
         if (count <= 0) {
             return res.json({
-                success: 'Load list users successfully',
+                success: 'Tải danh sách người dùng thành công',
                 filter,
                 size,
                 users: [],
@@ -377,7 +377,7 @@ exports.listUser = (req, res) => {
                 });
 
                 return res.json({
-                    success: 'Load list users successfully',
+                    success: 'Tải danh sách người dùng thành công',
                     filter,
                     size,
                     users,
@@ -385,7 +385,7 @@ exports.listUser = (req, res) => {
             })
             .catch((error) => {
                 return res.status(500).json({
-                    error: 'Load list users failed',
+                    error: 'Tải danh sách người dùng thất bại',
                 });
             });
     });
@@ -432,7 +432,7 @@ exports.listUserForAdmin = (req, res) => {
     User.countDocuments(filterArgs, (error, count) => {
         if (error) {
             return res.status(404).json({
-                error: 'Users not found',
+                error: 'Không tìm thấy người dùng',
             });
         }
 
@@ -446,7 +446,7 @@ exports.listUserForAdmin = (req, res) => {
 
         if (count <= 0) {
             return res.json({
-                success: 'Load list users successfully',
+                success: 'Tải danh sách người dùng thành công',
                 filter,
                 size,
                 users: [],
@@ -464,7 +464,7 @@ exports.listUserForAdmin = (req, res) => {
                 });
 
                 return res.json({
-                    success: 'Load list users successfully',
+                    success: 'Tải danh sách người dùng thành công',
                     filter,
                     size,
                     users,
@@ -472,7 +472,7 @@ exports.listUserForAdmin = (req, res) => {
             })
             .catch((error) => {
                 return res.status(500).json({
-                    error: 'Load list users failed',
+                    error: 'Tải danh sách người dùng thất bại',
                 });
             });
     });

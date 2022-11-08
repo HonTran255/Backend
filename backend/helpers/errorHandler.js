@@ -8,9 +8,9 @@ const uniqueMessage = (error) => {
         output =
             fieldName.charAt(0).toUpperCase() +
             fieldName.slice(1) +
-            ' already exists';
+            ' đã tồn tại';
     } catch (ex) {
-        output = 'Unique field already exists';
+        output = 'File đã tồn tại';
     }
 
     return output;
@@ -26,7 +26,7 @@ exports.errorHandler = (error) => {
                 message = uniqueMessage(error);
                 break;
             default:
-                message = 'Something went wrong';
+                message = 'Có lỗi xảy ra';
         }
     } else {
         // for (let errorName in error.errorors) {

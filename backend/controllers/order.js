@@ -10,7 +10,7 @@ exports.orderById = (req, res, next, id) => {
     Order.findById(id, (error, order) => {
         if (error || !order) {
             return res.status(404).json({
-                error: 'Order not found',
+                error: 'Không tìm thấy đơn hàng',
             });
         }
 
@@ -23,7 +23,7 @@ exports.orderItemById = (req, res, next, id) => {
     OrderItem.findById(id, (error, orderItem) => {
         if (error || !orderItem) {
             return res.status(404).json({
-                error: 'OrderItem not found',
+                error: 'Không tìm thấy ID đơn hàng',
             });
         }
 
@@ -48,13 +48,13 @@ exports.listOrderItems = (req, res) => {
         .exec()
         .then((items) => {
             return res.json({
-                success: 'Load list order items successfully',
+                success: 'Tải danh sách đơn hàng thành công',
                 items,
             });
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'Load list order items failed',
+                error: 'Tải danh sách đơn hàng thất bại',
             });
         });
 };
@@ -118,7 +118,7 @@ exports.listOrderByUser = (req, res) => {
         (error, result) => {
             if (error) {
                 return res.status(404).json({
-                    error: 'List orders by user not found',
+                    error: 'Không tìm thấy danh sách đơn hàng của người dùng',
                 });
             }
 
@@ -134,7 +134,7 @@ exports.listOrderByUser = (req, res) => {
 
             if (size <= 0) {
                 return res.json({
-                    success: 'Load list orders by user successfully',
+                    success: 'Tải danh sách đơn hàng của người dùng thành công',
                     filter,
                     size,
                     orders: [],
@@ -150,7 +150,7 @@ exports.listOrderByUser = (req, res) => {
                 .exec()
                 .then((orders) => {
                     return res.json({
-                        success: 'Load list orders by user successfully',
+                        success: 'Tải danh sách đơn hàng của người dùng thành công',
                         filter,
                         size,
                         orders,
@@ -158,7 +158,7 @@ exports.listOrderByUser = (req, res) => {
                 })
                 .catch((error) => {
                     return res.status(500).json({
-                        error: 'Load list orders by user failed',
+                        error: 'Tải danh sách đơn hàng của người dùng thất bại',
                     });
                 });
         },
@@ -221,7 +221,7 @@ exports.listOrderForAdmin = (req, res) => {
         (error, result) => {
             if (error) {
                 return res.status(404).json({
-                    error: 'List orders not found',
+                    error: 'Không tìm thấy đơn hàng',
                 });
             }
 
@@ -235,7 +235,7 @@ exports.listOrderForAdmin = (req, res) => {
 
             if (size <= 0) {
                 return res.json({
-                    success: 'Load list orders successfully',
+                    success: 'Tải danh sách đơn hàng thành công',
                     filter,
                     size,
                     orders: [],
@@ -251,7 +251,7 @@ exports.listOrderForAdmin = (req, res) => {
                 .exec()
                 .then((orders) => {
                     return res.json({
-                        success: 'Load list orders successfully',
+                        success: 'Tải danh sách đơn hàng thành công',
                         filter,
                         size,
                         orders,
@@ -259,7 +259,7 @@ exports.listOrderForAdmin = (req, res) => {
                 })
                 .catch((error) => {
                     return res.status(500).json({
-                        error: 'Load list orders failed',
+                        error: 'Tải danh sách đơn hàng thất bại',
                     });
                 });
         },
@@ -285,7 +285,7 @@ exports.createOrder = (req, res, next) => {
         !amount
     )
         return res.status(400).json({
-            error: 'All fields are required',
+            error: 'Thiếu dữ liệu',
         });
         
 
@@ -359,14 +359,14 @@ exports.removeCart = (req, res, next) => {
         .then((cart) => {
             if (!cart)
                 return res.status(400).json({
-                    error: 'Remove cart failed',
+                    error: 'Xóa giỏ hàng thất bại',
                 });
             //remove all cart items
             else next();
         })
         .catch((error) => {
             return res.status(400).json({
-                error: 'Remove cart failed',
+                error: 'Xóa giỏ hàng thất bại',
             });
         });
 };
@@ -375,11 +375,11 @@ exports.removeAllCartItems = (req, res) => {
     CartItem.deleteMany({ cartId: req.cart._id }, (error, items) => {
         if (error)
             return res.status(400).json({
-                error: 'Remove all cart items failed',
+                error: 'Xóa sản phẩm thất bại',
             });
         else
             return res.json({
-                success: 'Create order successfully',
+                success: 'Tạo đơn hàng thành công',
                 order: req.order,
                 user: cleanUserLess(req.user),
             });
@@ -406,7 +406,7 @@ exports.readOrder = (req, res) => {
         .then((order) => {
             if (!order)
                 return res.status(500).json({
-                    error: 'Not found!',
+                    error: 'Không tìm thấy',
                 });
 
             return res.json({
@@ -416,7 +416,7 @@ exports.readOrder = (req, res) => {
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'Not found!',
+                error: 'Không tìm thấy',
             });
         });
 };
@@ -426,21 +426,21 @@ exports.updateStatusForUser = (req, res, next) => {
     const currentStatus = req.order.status;
     if (currentStatus !== '0')
         return res.status(401).json({
-            error: 'This order is already processed!',
+            error: 'Đơn hàng này đã được xử lý',
         });
 
     const time = new Date().getTime() - new Date(req.order.createdAt).getTime();
     const hours = Math.floor(time / 1000) / 3600;
     if (hours >= 1) {
         return res.status(401).json({
-            error: 'This order is not within the time allowed!',
+            error: 'Đã hết thời gian chỉnh sửa',
         });
     }
 
     const { status } = req.body;
     if (status !== '4')
         return res.status(401).json({
-            error: 'This status value is invalid!',
+            error: 'Không ',
         });
 
     Order.findOneAndUpdate(
@@ -454,7 +454,7 @@ exports.updateStatusForUser = (req, res, next) => {
         .then((order) => {
             if (!order)
                 return res.status(500).json({
-                    error: 'Not found!',
+                    error: 'Không tìm thấy',
                 });
 
             if (order.status === 'Cancelled') {
@@ -474,14 +474,14 @@ exports.updateStatusForUser = (req, res, next) => {
             }
 
             return res.json({
-                success: 'update order successfully',
+                success: 'Cập nhật giỏ hàng thành công',
                 order,
                 user: cleanUserLess(req.user),
             });
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'update order failed',
+                error: 'Cập nhật thất bại',
             });
         });
 };
@@ -509,17 +509,17 @@ exports.updateStatusForAdmin = (req, res, next) => {
         .then((order) => {
             if (!order)
                 return res.status(500).json({
-                    error: 'Not found!',
+                    error: 'Không tìm thấy',
                 });
             else
                 return res.json({
-                    success: 'update order successfully',
+                    success: 'Cập nhật đơn hàng thành công',
                     order,
                 });
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'update order failed',
+                error: 'Cập nhật đơn hàng thất bại',
             });
         });
 };
@@ -558,19 +558,19 @@ exports.updateQuantitySoldProduct = (req, res, next) => {
             Product.bulkWrite(bulkOps, {}, (error, products) => {
                 if (error) {
                     return res.status(400).json({
-                        error: 'Could not update product',
+                        error: 'Không thể cập nhật sản phẩm',
                     });
                 }
 
                 return res.json({
-                    success: 'Order successfully, update product successfully',
+                    success: 'Cập nhật sản phẩm thành công',
                     order: req.order,
                 });
             });
         })
         .catch((error) => {
             return res.status(400).json({
-                error: 'Could not update product quantity, sold',
+                error: 'Không thể cập nhật số lượng',
             });
         });
 

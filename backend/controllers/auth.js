@@ -104,7 +104,7 @@ exports.signout = (req, res) => {
         .exec()
         .then(() => {
             return res.json({
-                success: 'Sign out successfully',
+                success: 'Đăng xuất thành công',
             });
         })
         .catch((error) => {
@@ -234,7 +234,7 @@ exports.changePassword = (req, res) => {
         .then((user) => {
             if (!user) {
                 return res.status(404).json({
-                    error: 'User not found',
+                    error: 'Không tìm thấy người dùng',
                 });
             }
 
@@ -242,17 +242,17 @@ exports.changePassword = (req, res) => {
             user.save((e, u) => {
                 if (e) {
                     return res.status(500).json({
-                        error: 'Update password failed, Please request to resend mail/sms',
+                        error: 'Cập nhật mật khẩu thất bại',
                     });
                 }
                 return res.json({
-                    success: 'Update password successfully',
+                    success: 'Cập nhật thành công',
                 });
             });
         })
         .catch((error) => {
             return res.status(404).json({
-                error: 'User not found',
+                error: 'Không tìm thấy người dùng',
             });
         });
 };
@@ -282,7 +282,7 @@ exports.authSocial = (req, res, next) => {
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'Signing in with Google/Facebook failed',
+                error: 'Đăng nhập Google thất bại',
             });
         });
 };
@@ -394,7 +394,7 @@ exports.isAuth = (req, res, next) => {
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, decoded) => {
             if (error) {
                 return res.status(401).json({
-                    error: 'Unauthorized! Please sign in again',
+                    error: 'Hãy đăng nhập lại',
                 });
             }
 
@@ -402,13 +402,13 @@ exports.isAuth = (req, res, next) => {
                 next();
             } else {
                 return res.status(403).json({
-                    error: 'Access denied',
+                    error: 'Liên kết bị từ chối',
                 });
             }
         });
     } else {
         return res.status(401).json({
-            error: 'No token provided! Please sign in again',
+            error: 'Hãy đăng nhập lại',
         });
     }
 };
@@ -416,7 +416,7 @@ exports.isAuth = (req, res, next) => {
 exports.isAdmin = (req, res, next) => {
     if (req.user.role !== 'admin') {
         return res.status(403).json({
-            error: 'Admin resource! Access denied',
+            error: 'Liên kết bị từ chôi',
         });
     }
     next();

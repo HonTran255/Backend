@@ -7,7 +7,7 @@ exports.reviewById = (req, res, next, id) => {
     Review.findById(id, (error, review) => {
         if (error || !review) {
             return res.status(404).json({
-                error: 'Review not found',
+                error: 'Không thấy đánh giá',
             });
         }
 
@@ -24,7 +24,7 @@ exports.checkReview = (req, res) => {
         .then((review) => {
             if (!review)
                 return res.status(404).json({
-                    error: 'Review not found',
+                    error: 'Không tìm thấy đánh giá',
                 });
 
             return res.json({
@@ -34,7 +34,7 @@ exports.checkReview = (req, res) => {
         })
         .catch((err) => {
             return res.status(404).json({
-                error: 'Review not found',
+                error: 'Không tìm thấy đánh giá',
             });
         });
 };
@@ -44,7 +44,7 @@ exports.createReview = (req, res, next) => {
 
     if (!rating || !productId || !orderId)
         return res.status(400).json({
-            error: 'All fields are required',
+            error: 'Thiếu dữ liệu',
         });
 
     const review = new Review({
@@ -63,7 +63,7 @@ exports.createReview = (req, res, next) => {
             //update rating
             next();
             return res.json({
-                success: 'Review successfully',
+                success: 'Đánh giá thành công',
                 review,
             });
         }
@@ -75,7 +75,7 @@ exports.updateReview = (req, res, next) => {
 
     if (!content || !rating)
         return res.status(400).json({
-            error: 'All fields are required',
+            error: 'Thiếu dữ liệu',
         });
 
     Review.findOneAndUpdate(
@@ -93,7 +93,7 @@ exports.updateReview = (req, res, next) => {
                 //update rating
                 next();
                 return res.json({
-                    success: 'Update review successfully',
+                    success: 'Cập nhật đánh giá thành công',
                     review,
                 });
             }
@@ -115,7 +115,7 @@ exports.removeReview = (req, res, next) => {
                 };
                 next();
                 return res.json({
-                    success: 'Remove review successfully',
+                    success: 'Cập nhật đánh giá thành công',
                     review,
                 });
             }
@@ -209,7 +209,7 @@ exports.listReviews = (req, res) => {
     Review.countDocuments(filterArgs, (error, count) => {
         if (error)
             return res.status(404).json({
-                error: 'Reviews not found',
+                error: 'Không tìm thấy',
             });
 
         const size = count;
@@ -222,7 +222,7 @@ exports.listReviews = (req, res) => {
 
         if (count <= 0) {
             return res.json({
-                success: 'Load list reviews successfully',
+                success: 'Tải danh sách đánh giá thành công',
                 filter,
                 size,
                 reviews: [],
@@ -238,7 +238,7 @@ exports.listReviews = (req, res) => {
             .exec()
             .then((reviews) => {
                 return res.json({
-                    success: 'Load list reviews successfully',
+                    success: 'Tải danh sách đánh giá thành công',
                     filter,
                     size,
                     reviews,
@@ -246,7 +246,7 @@ exports.listReviews = (req, res) => {
             })
             .catch((error) => {
                 return res.status(500).json({
-                    error: 'Load list reviews failed',
+                    error: 'Tải danh sách đánh giá thất bại',
                 });
             });
     });

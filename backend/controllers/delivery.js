@@ -5,7 +5,7 @@ exports.deliveryById = (req, res, next, id) => {
     Delivery.findById(id, (error, delivery) => {
         if (error || !delivery) {
             return res.status(404).json({
-                error: 'Delivery not found',
+                error: 'Không tìm thấy đơn vị vận chuyển',
             });
         }
 
@@ -17,7 +17,7 @@ exports.deliveryById = (req, res, next, id) => {
 exports.readDelivery = (req, res) => {
     if (req.delivery.isDeleted)
         return res.status(404).json({
-            error: 'delivery not found',
+            error: 'Không tìm thấy đơn vị vận chuyển',
         });
     else
         return res.json({
@@ -31,7 +31,7 @@ exports.createDelivery = (req, res) => {
 
     if (!name || !price || !description)
         return res.status(400).json({
-            error: 'All fields are required',
+            error: 'Thiếu dữ liệu',
         });
 
     const delivery = new Delivery({
@@ -48,7 +48,7 @@ exports.createDelivery = (req, res) => {
         }
 
         return res.json({
-            success: 'Create delivery successfully',
+            success: 'Tạo đơn vị vận chuyển thành công',
             delivery,
         });
     });
@@ -59,7 +59,7 @@ exports.updateDelivery = (req, res) => {
 
     if (!name || !price || !description)
         return res.status(400).json({
-            error: 'All fields are required',
+            error: 'Thiếu dữ liệu',
         });
 
     Delivery.findOneAndUpdate(
@@ -71,12 +71,12 @@ exports.updateDelivery = (req, res) => {
         .then((delivery) => {
             if (!delivery) {
                 return res.status(500).json({
-                    error: 'delivery not found',
+                    error: 'Không tìm thấy đơn vị vận chuyển',
                 });
             }
 
             return res.json({
-                success: 'Update delivery successfully',
+                success: 'Cập nhật đơn vị vận chuyển thành công',
                 delivery,
             });
         })
@@ -97,12 +97,12 @@ exports.removeDelivery = (req, res) => {
         .then((delivery) => {
             if (!delivery) {
                 return res.status(500).json({
-                    error: 'delivery not found',
+                    error: 'Không tìm thấy đơn vị vận chuyển',
                 });
             }
 
             return res.json({
-                success: 'Remove delivery successfully',
+                success: 'Xóa đơn vị vận chuyển thành công',
                 delivery,
             });
         })
@@ -123,12 +123,12 @@ exports.restoreDelivery = (req, res) => {
         .then((delivery) => {
             if (!delivery) {
                 return res.status(500).json({
-                    error: 'delivery not found',
+                    error: 'Không tìm thấy đơn vị vận chuyển',
                 });
             }
 
             return res.json({
-                success: 'Restore delivery successfully',
+                success: 'Hoàn đơn vị vận chuyển thành công',
                 delivery,
             });
         })
@@ -178,7 +178,7 @@ exports.listActiveDeliveries = (req, res) => {
     Delivery.countDocuments(filterArgs, (error, count) => {
         if (error) {
             return res.status(404).json({
-                error: 'List active deliveries not found',
+                error: 'Không tìm thấy danh sách',
             });
         }
 
@@ -192,7 +192,7 @@ exports.listActiveDeliveries = (req, res) => {
 
         if (count <= 0) {
             return res.json({
-                success: 'Load list active deliveries successfully',
+                success: 'Tải danh sách thành công',
                 filter,
                 size,
                 deliveries: [],
@@ -206,7 +206,7 @@ exports.listActiveDeliveries = (req, res) => {
             .exec()
             .then((deliveries) => {
                 return res.json({
-                    success: 'Load list active deliveries successfully',
+                    success: 'Tải danh sách thành công',
                     filter,
                     size,
                     deliveries,
@@ -214,7 +214,7 @@ exports.listActiveDeliveries = (req, res) => {
             })
             .catch((error) => {
                 return res.status(500).json({
-                    error: 'Load list active deliveries failed',
+                    error: 'Tải danh sách thất bại',
                 });
             });
     });
@@ -258,7 +258,7 @@ exports.listDeliveries = (req, res) => {
     Delivery.countDocuments(filterArgs, (error, count) => {
         if (error) {
             return res.status(404).json({
-                error: 'List deliveries not found',
+                error: 'Không tìm thấy danh sách',
             });
         }
 
@@ -272,7 +272,7 @@ exports.listDeliveries = (req, res) => {
 
         if (count <= 0) {
             return res.json({
-                success: 'Load list deliveries successfully',
+                success: 'Tải danh sách thành công',
                 filter,
                 size,
                 deliveries: [],
@@ -286,7 +286,7 @@ exports.listDeliveries = (req, res) => {
             .exec()
             .then((deliveries) => {
                 return res.json({
-                    success: 'Load list deliveries successfully',
+                    success: 'Tải danh sách thành công',
                     filter,
                     size,
                     deliveries,
@@ -294,7 +294,7 @@ exports.listDeliveries = (req, res) => {
             })
             .catch((error) => {
                 return res.status(500).json({
-                    error: 'Load list deliveries failed',
+                    error: 'Tải danh sách thất bại',
                 });
             });
     });

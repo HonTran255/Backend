@@ -6,7 +6,7 @@ exports.cartById = (req, res, next, id) => {
     Cart.findById(id, (error, cart) => {
         if (error || !cart) {
             return res.status(404).json({
-                error: 'Cart not found',
+                error: 'Không tìm thấy giỏ hàng',
             });
         }
 
@@ -19,7 +19,7 @@ exports.cartItemById = (req, res, next, id) => {
     CartItem.findById(id, (error, cartItem) => {
         if (error || !cartItem) {
             return res.status(404).json({
-                error: 'CartItem not found',
+                error: 'Không tìm thấy sản phẩm',
             });
         }
 
@@ -38,7 +38,7 @@ exports.createCart = (req, res, next) => {
         .then((cart) => {
             if (!cart)
                 return res.status(400).json({
-                    error: 'Create cart failed',
+                    error: 'Tạo giỏ hàng thất bại',
                 });
             else {
                 //create cart item
@@ -48,7 +48,7 @@ exports.createCart = (req, res, next) => {
         })
         .catch((error) => {
             return res.status(400).json({
-                error: 'Create cart failed',
+                error: 'Tạo giỏ hàng thất bại',
             });
         });
 };
@@ -65,7 +65,7 @@ exports.createCartItem = (req, res, next) => {
                 next();
             } else {
                 return res.status(400).json({
-                    error: 'All fields are required',
+                    error: 'Thiếu dữ liệu',
                 });
             }
         });
@@ -90,11 +90,11 @@ exports.createCartItem = (req, res, next) => {
         .then((item) => {
             if (!item)
                 return res.status(400).json({
-                    error: 'Create cart item failed',
+                    error: 'Tạo giỏ hàng thất bại',
                 });
             else
                 return res.json({
-                    success: 'Add to cart successfully',
+                    success: 'Thêm giỏ hàng thành công',
                     item,
                     user: cleanUserLess(req.user),
                 });
@@ -117,7 +117,7 @@ exports.listCarts = (req, res) => {
     Cart.countDocuments({ userId, isDeleted: false }, (error, count) => {
         if (error) {
             return res.status(404).json({
-                error: 'List carts not found',
+                error: 'Không tìm thấy danh sách',
             });
         }
 
@@ -131,7 +131,7 @@ exports.listCarts = (req, res) => {
 
         if (count <= 0) {
             return res.json({
-                success: 'Load list carts successfully',
+                success: 'Tải danh sách giỏ hàng thành công',
                 filter,
                 size,
                 carts: [],
@@ -145,7 +145,7 @@ exports.listCarts = (req, res) => {
             .exec()
             .then((carts) => {
                 return res.json({
-                    success: 'Load list carts successfully',
+                    success: 'Tải danh sách giỏ hàng thành công',
                     filter,
                     size,
                     carts,
@@ -153,7 +153,7 @@ exports.listCarts = (req, res) => {
             })
             .catch((error) => {
                 return res.status(500).json({
-                    error: 'Load list carts failed',
+                    error: 'Tải danh sách giỏ hàng thất bại',
                 });
             });
     });
@@ -174,13 +174,13 @@ exports.listItemByCard = (req, res) => {
         .exec()
         .then((items) => {
             return res.json({
-                success: 'Load list cart items successfully',
+                success: 'Tải danh sách giỏ hàng thành công',
                 items,
             });
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'Load list cart items failed',
+                error: 'Tải danh sách giỏ hàng thất bại',
             });
         });
 };
@@ -206,14 +206,14 @@ exports.updateCartItem = (req, res) => {
         .exec()
         .then((item) => {
             return res.json({
-                success: 'Update cart item successfully',
+                success: 'Cập nhật thành công',
                 item,
                 user: cleanUserLess(req.user),
             });
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'Update cart item failed',
+                error: 'Cập nhật thất bại',
             });
         });
 };
@@ -230,7 +230,7 @@ exports.removeCartItem = (req, res, next) => {
                     next();
                 } else {
                     return res.json({
-                        success: 'Remove cart item successfully',
+                        success: 'Xóa sản phẩm thành công',
                         user: cleanUserLess(req.user),
                     });
                 }
@@ -238,7 +238,7 @@ exports.removeCartItem = (req, res, next) => {
         })
         .catch((error) => {
             return res.status(500).json({
-                error: 'Remove cart item failed',
+                error: 'Xóa sản phẩm thất bại',
             });
         });
 };
@@ -253,17 +253,17 @@ exports.removeCart = (req, res) => {
         .then((cart) => {
             if (!cart)
                 return res.status(400).json({
-                    error: 'Remove cart failed',
+                    error: 'Xóa sản phẩm thất bại',
                 });
             return res.json({
-                success: 'Remove cart successfully',
+                success: 'Xóa sản phẩm thành công',
                 cart,
                 user: cleanUserLess(req.user),
             });
         })
         .catch((error) => {
             return res.status(400).json({
-                error: 'Remove cart failed',
+                error: 'Xóa sản phẩm thất bại',
             });
         });
 };
@@ -291,7 +291,7 @@ exports.countCartItems = (req, res) => {
         (error, result) => {
             if (error)
                 return res.status(500).json({
-                    error: 'Count cart items failed',
+                    error: 'Đếm thất bại',
                 });
 
             const findedResult = result.find((r) =>
@@ -302,7 +302,7 @@ exports.countCartItems = (req, res) => {
             // console.log(result, findedResult);
 
             return res.status(200).json({
-                success: 'Count cart items successfully',
+                success: 'Đếm thành công',
                 count,
             });
         },
